@@ -1,12 +1,18 @@
+import { hexToRgb } from "../utils/color";
+
+const backgroundColor = hexToRgb('#efeee1');
+const outlineColor = hexToRgb('#2e1805');
+const bodyColor = backgroundColor;
+
 export const settings = {
   heightMap: {
-    frequency: 2,
-    pow: 5
+    frequency: 0.45,
+    pow: 3
   },
   leaves: {
     tries: 8,
-    minRadius: 5,
-    maxRadius: 200,
+    minRadius: 3,
+    maxRadius: 150,
   },
   growth: {
     startPosition: 'fromSeed',
@@ -43,5 +49,22 @@ export const settings = {
       minRange: 1,
       maxRange: 10,
     }
+  },
+  rendererSettings: {
+    minThickness: 0.5,
+    maxThickness: 220,
+    thicknessPow: 2.5,
+    thicknessDelta: 0.2,
+    elevation: {
+      angle: Math.random() * Math.PI * 2,
+      steps: 2
+    },
+    colors: {
+      background: backgroundColor,
+      outline: outlineColor,
+      body: bodyColor
+    }
   }
 } as const;
+
+export type Settings = typeof settings;

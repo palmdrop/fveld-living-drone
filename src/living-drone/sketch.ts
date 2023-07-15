@@ -127,7 +127,11 @@ export const sketch = (p: p5) => {
       1
     );
 
-    renderer = createRenderer(p);
+    renderer = createRenderer(
+      p, 
+      heightMap, 
+      settings.rendererSettings
+    );
   }
 
   p.windowResized = debounce(() => {
@@ -144,20 +148,11 @@ export const sketch = (p: p5) => {
   }
 
   p.draw = () => {
-    // p.background(0);
-
     if(!graph.isExhausted()) {
       graph.grow();
     }
 
-    // p.circle(p.width / 2, p.height / 2, 100);
-    p.strokeWeight(1);
-    /*
-    graph.getLeaves().forEach(point => {
-      p.circle(point.x, point.y, 1);
-    });
-    */
-
-    renderer.render(graph);
+    renderer.draw(graph);
+    renderer.render();
   }
 }

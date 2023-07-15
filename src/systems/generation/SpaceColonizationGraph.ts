@@ -30,7 +30,7 @@ class Segment {
 export type Segment = {
   origin : Point,
   direction : Point,
-  position ?: Point,
+  position?: Point,
   children : Segment[],
   depth ?: number,
   reverseDepth ?: number,

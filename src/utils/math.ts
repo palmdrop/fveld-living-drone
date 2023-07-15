@@ -98,10 +98,14 @@ export const normalizeVector = (point: Point) => {
   return point;
 }
 
+export const lerp = (v1: number, v2: number, n: number) => {
+  return v1 + n * (v2 - v1);
+}
+
 export const lerpPoints = (p1: Point, p2: Point, n: number) => {
   return {
-    x: p1.x + n * (p2.x - p1.x),
-    y: p1.y + n * (p2.y - p1.y)
+    x: lerp(p1.x, p2.x, n),
+    y: lerp(p1.y, p2.y, n)
   }
 }
 
