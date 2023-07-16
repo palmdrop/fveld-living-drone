@@ -1,7 +1,7 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#e6e5df');
-const outlineColor = hexToRgb('#474d2c');
+const backgroundColor = hexToRgb('#e0dfd6');
+const outlineColor = hexToRgb('#483d0e');
 const bodyColor = backgroundColor;
 
 export const settings = {
@@ -12,42 +12,57 @@ export const settings = {
   leaves: {
     tries: 8,
     minRadius: 3,
-    maxRadius: 350,
+    maxRadius: 150,
+    circleRadius: 0.25
+  },
+  attractor: {
+    min: 0.9,
+    max: 0.8,
+    minRange: 1,
+    maxRange: 10,
+
+    speed: 700,
+    maxForce: 2000,
+    maxSpeed: 3000,
+    falloffFrom: 100,
+    falloff: 2,
+
+    friction: 1,
+
+    noiseFrequency: 0.0003,
+    noiseAmount: 300,
+    noiseSpeed: 0.0001,
+
+    gravityAmount: 0.001,
+    gravityFalloff: 1
   },
   growth: {
     startPosition: 'fromSeed',
     maxSteps: 1000,
+    maxChildren: 3,
     mode: 'open',
-    seedSpawnProbability: 1.02,
-    seedSpawnMaxMultiplier: 1.5,
     minDepth: 1,
 
     minDistance: {
       min: 10,
-      max: 30,
+      max: 15,
     },
     maxDistance: {
       min: 100,
-      max: 120
+      max: 200
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
-      min: 1.0,
-      max: 0.5
+      min: 1,
+      max: 0.3
     },
     stepSize: {
-      min: 4,
-      max: 8
+      min: 2.5,
+      max: 10
     },
     randomDeviation: {
       min: 0.5,
       max: 2.5
-    },
-    gravity: {
-      min: 0.9,
-      max: 0.9,
-      minRange: 1,
-      maxRange: 10,
     }
   },
   rendererSettings: {
@@ -65,8 +80,8 @@ export const settings = {
       body: bodyColor
     },
     fade: {
-      alpha: 0.8,
-      duration: 1000
+      amount: 0,
+      duration: 10000
     }
   }
 } as const;

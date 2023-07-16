@@ -119,26 +119,18 @@ export const createRenderer = (
   const render = () => {
     if(fading && (p.millis() - fadeStart) < settings.fade.duration) {
       const delta = p.deltaTime / settings.fade.duration;
+      const alpha = 255 * settings.fade.amount * delta
 
-      baseLayer.fill(
+      baseLayer.background(
         settings.colors.background.r,
         settings.colors.background.g,
         settings.colors.background.b,
-        Math.floor(255 * delta)
-        // 6
+        alpha
       );
-
-      baseLayer.rect(0, 0, p.width, p.height);
     } else {
       fading = false;
     }
 
-    p.background(
-      settings.colors.background.r,
-      settings.colors.background.g,
-      settings.colors.background.b,
-      255
-    );
     p.image(baseLayer, 0, 0);
     p.image(lowerLayer, 0, 0);
     p.image(upperLayer, 0, 0);
