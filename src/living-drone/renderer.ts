@@ -9,22 +9,41 @@ export const createRenderer = (
   heightMap: (point: Point) => number,
   settings: Settings['rendererSettings']
 ) => {
+  let baseLayer: p5.Graphics;
   let lowerLayer: p5.Graphics;
   let upperLayer: p5.Graphics;
 
-  const handleResize = () => {
-    p.background(0);
+  let fading = false;
+  let fadeStart = p.millis();
 
-    const oldLowerLayer = lowerLayer;
-    const oldUpperLayer = upperLayer;
-
+  const initDrawLayers = () => {
     lowerLayer = p.createGraphics(p.width, p.height);
     upperLayer = p.createGraphics(p.width, p.height);
+  }
+
+  const initBaseLayer = () => {
+    baseLayer = p.createGraphics(p.width, p.height);
+    baseLayer.background(
+      settings.colors.background.r,
+      settings.colors.background.g,
+      settings.colors.background.b
+    );
+  }
+
+  initDrawLayers();
+  initBaseLayer();
+
+  const handleResize = () => {
+    // TODO
+    const oldLowerLayer = lowerLayer;
+    const oldUpperLayer = upperLayer;
+    const oldBaseLayer = baseLayer;
+
+    initDrawLayers();
+    initBaseLayer();
 
     // TODO: render old layers to new layers to preserve contents?
   }
-
-  handleResize();
 
   const renderConnection = (
     parent: Segment | null,
@@ -98,18 +117,49 @@ export const createRenderer = (
   }
 
   const render = () => {
+    if(fading && (p.millis() - fadeStart) < settings.fade.duration) {
+      const delta = p.deltaTime / settings.fade.duration;
+
+      baseLayer.fill(
+        settings.colors.background.r,
+        settings.colors.background.g,
+        settings.colors.background.b,
+        Math.floor(255 * delta)
+        // 6
+      );
+
+      baseLayer.rect(0, 0, p.width, p.height);
+    } else {
+      fading = false;
+    }
+
     p.background(
       settings.colors.background.r,
       settings.colors.background.g,
-      settings.colors.background.b
+      settings.colors.background.b,
+      255
     );
+    p.image(baseLayer, 0, 0);
     p.image(lowerLayer, 0, 0);
     p.image(upperLayer, 0, 0);
   }
 
+  const createNewLayer = () => {
+    baseLayer.image(lowerLayer, 0, 0);
+    baseLayer.image(upperLayer, 0, 0);
+
+    lowerLayer.clear(0, 0, 0, 0);
+    upperLayer.clear(0, 0, 0, 0);
+
+    fading = true;
+    fadeStart = p.millis();
+  }
+
   return {
     draw,
-    render
+    render,
+    handleResize,
+    createNewLayer
   }
 }
 

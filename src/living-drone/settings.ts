@@ -1,7 +1,7 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#efeee1');
-const outlineColor = hexToRgb('#2e1805');
+const backgroundColor = hexToRgb('#e6e5df');
+const outlineColor = hexToRgb('#474d2c');
 const bodyColor = backgroundColor;
 
 export const settings = {
@@ -12,7 +12,7 @@ export const settings = {
   leaves: {
     tries: 8,
     minRadius: 3,
-    maxRadius: 150,
+    maxRadius: 350,
   },
   growth: {
     startPosition: 'fromSeed',
@@ -63,6 +63,10 @@ export const settings = {
       background: backgroundColor,
       outline: outlineColor,
       body: bodyColor
+    },
+    fade: {
+      alpha: 0.8,
+      duration: 1000
     }
   }
 } as const;

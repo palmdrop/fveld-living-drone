@@ -6,16 +6,94 @@ import { SpaceColonizationGraph } from '../systems/generation/SpaceColonizationG
 import { mapLinear, random, randomUnitVector } from '../utils/math';
 import { Renderer, createRenderer } from './renderer';
 import { settings } from './settings';
+import { randomElement } from '../utils/array';
 
 export const sketch = (p: p5) => {
   let poissionDiskSampleGenerator: PoissonDiskSampleGenerator;
   let graph: SpaceColonizationGraph;
   let renderer: Renderer;
+  let points: Point[];
+
+  const heightMap = (point: Point) => {
+    return p.noise(
+      point.x * settings.heightMap.frequency, 
+      point.y * settings.heightMap.frequency
+    ) ** settings.heightMap.pow;
+  }
+
+  const createGraph = (points: Point[]) => {
+    const graph = new SpaceColonizationGraph(
+      // Min distance  
+      p => {
+        return mapLinear(
+          heightMap(p),
+          0, 1,
+          settings.growth.minDistance?.min ?? 3, settings.growth.minDistance?.max ?? 10
+        );
+      },
+      // Max distance  
+      p => {
+        return mapLinear(
+          heightMap(p),
+          0, 1,
+          settings.growth.maxDistance?.min ?? 70, settings.growth.maxDistance?.max ?? 220
+        );
+      },
+      // Dynamics
+      // NOTE: low dynamics creates pretty nice metal patterns...
+      p => {
+        return mapLinear(
+          heightMap(p),
+          0, 1,
+          settings.growth.dynamics?.min ?? 1, settings.growth.dynamics?.max ?? 1
+        );
+      },
+      // Step size
+      // NOTE: step size of 10 provides really chaotic results
+      p => {
+        return mapLinear(
+          heightMap(p),
+          0, 1,
+          settings.growth.stepSize?.min ?? 1, settings.growth.stepSize?.max ?? 1
+        );
+      },
+      // Random deviation
+      p => {
+        return mapLinear(
+          heightMap(p),
+          0, 1,
+          settings.growth.randomDeviation?.min ?? 0.5, settings.growth.randomDeviation?.max ?? 2
+        );
+      },
+      settings.growth.mode,
+      3,
+      settings.growth.minDepth 
+    );
+
+    graph.setGravity(settings.growth.gravity);
+
+    graph.generate(
+      points,
+      poissionDiskSampleGenerator.area,
+      /*
+      {
+        x: p.width / 2,
+        y: p.height / 2,
+      },
+      */
+      randomElement(points),
+      randomUnitVector(),
+      1
+    );
+
+    return graph;
+  }
+
   p.setup = () => {
     const p5Renderer = p.createCanvas(window.innerWidth, window.innerHeight);
     p.background(p.color(0));
     p.smooth();
-    p.colorMode(p.RGB);
+    // p.colorMode(p.RGB);
 
     const canvas = p5Renderer.elt as HTMLCanvasElement;
     canvas.style.width = "100vw";
@@ -23,13 +101,7 @@ export const sketch = (p: p5) => {
 
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
 
-    const heightMap = (point: Point) => {
-      return p.noise(
-        point.x * settings.heightMap.frequency, 
-        point.y * settings.heightMap.frequency
-      ) ** settings.heightMap.pow;
-    }
-
+   
     const createPointGenerator = () => {
       const minDimension = Math.min(p.width, p.height);
       return new PoissonDiskSampleGenerator({
@@ -53,79 +125,15 @@ export const sketch = (p: p5) => {
     poissionDiskSampleGenerator = createPointGenerator();
     poissionDiskSampleGenerator.generate(10000);
 
-    const createGraph = () => {
-      const graph = new SpaceColonizationGraph(
-        // Min distance  
-        p => {
-          return mapLinear(
-            heightMap(p),
-            0, 1,
-            settings.growth.minDistance?.min ?? 3, settings.growth.minDistance?.max ?? 10
-          );
-        },
-        // Max distance  
-        p => {
-          return mapLinear(
-            heightMap(p),
-            0, 1,
-            settings.growth.maxDistance?.min ?? 70, settings.growth.maxDistance?.max ?? 220
-          );
-        },
-        // Dynamics
-        // NOTE: low dynamics creates pretty nice metal patterns...
-        p => {
-          return mapLinear(
-            heightMap(p),
-            0, 1,
-            settings.growth.dynamics?.min ?? 1, settings.growth.dynamics?.max ?? 1
-          );
-        },
-        // Step size
-        // NOTE: step size of 10 provides really chaotic results
-        p => {
-          return mapLinear(
-            heightMap(p),
-            0, 1,
-            settings.growth.stepSize?.min ?? 1, settings.growth.stepSize?.max ?? 1
-          );
-        },
-        // Random deviation
-        p => {
-          return mapLinear(
-            heightMap(p),
-            0, 1,
-            settings.growth.randomDeviation?.min ?? 0.5, settings.growth.randomDeviation?.max ?? 2
-          );
-        },
-        settings.growth.mode,
-        3,
-        settings.growth.minDepth 
-      );
-
-      graph.setGravity(settings.growth.gravity);
-
-      return graph;
-    }
-
-    graph = createGraph();
-
     const radius = Math.min(poissionDiskSampleGenerator.area.w, poissionDiskSampleGenerator.area.h) / 2;
     const cX = poissionDiskSampleGenerator.area.x + poissionDiskSampleGenerator.area.w / 2;
     const cY = poissionDiskSampleGenerator.area.y + poissionDiskSampleGenerator.area.h / 2;
-    const points = poissionDiskSampleGenerator.points.filter(
+    points = poissionDiskSampleGenerator.points.filter(
       point => ((point.x - cX) ** 2 + (point.y - cY) ** 2) < (radius ** 2)
     );
 
-    graph.generate(
-      points,
-      poissionDiskSampleGenerator.area,
-      {
-        x: p.width / 2,
-        y: p.height / 2,
-      },
-      randomUnitVector(),
-      1
-    );
+
+    graph = createGraph([...points]);
 
     renderer = createRenderer(
       p, 
@@ -150,6 +158,9 @@ export const sketch = (p: p5) => {
   p.draw = () => {
     if(!graph.isExhausted()) {
       graph.grow();
+    } else {
+      renderer.createNewLayer();
+      graph = createGraph([...points]);
     }
 
     renderer.draw(graph);
