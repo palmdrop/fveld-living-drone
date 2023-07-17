@@ -37,9 +37,11 @@ export const createRenderer = (
 
   const handleResize = () => {
     // TODO
+    /*
     const oldLowerLayer = lowerLayer;
     const oldUpperLayer = upperLayer;
     const oldBaseLayer = baseLayer;
+    */
 
     initDrawLayers();
     initBaseLayer();

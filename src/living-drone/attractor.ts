@@ -1,5 +1,5 @@
 import { Point } from "../types/point";
-import { lengthOfVector, limitVector, mapLinear, normalizeVector } from "../utils/math";
+import { lengthOfVector, limitVector, mapLinear } from "../utils/math";
 import { Settings } from "./settings";
 
 export const createAttractor = (
@@ -17,19 +17,20 @@ export const createAttractor = (
       x: 0, y: 0
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    moveTowards: (point: Point) => { 
+    moveTowards: (_point: Point) => { 
       // 
     },
-    addForce: (force: Point) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    addForce: (_force: Point) => {
       // 
     },
-    update: (delta: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    update: (_delta: number) => {
       // 
     }
   };
 
   attractor.addForce = force => {
-    console.log(force);
     attractor.acceleration.x += force.x;
     attractor.acceleration.y += force.y;
   }

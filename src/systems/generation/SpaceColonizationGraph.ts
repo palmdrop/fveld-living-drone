@@ -475,7 +475,7 @@ export class SpaceColonizationGraph {
     // Calculate max depth
     let maxDepth = -1;
 
-    this.traverse( ( segment : Segment, parent : Segment | null, depth : number ) => {
+    this.traverse( ( segment : Segment, _ : Segment | null, depth : number ) => {
       // And set the depth of each segment
       segment.depth = depth;
 
