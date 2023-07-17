@@ -147,6 +147,7 @@ export const sketch = (p: p5) => {
 
   p.mousePressed = () => {
     mouseHeld = true;
+    mouseActive = true;
   }
 
   p.mouseReleased = () => {
