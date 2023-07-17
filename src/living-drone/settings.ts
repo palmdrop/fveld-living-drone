@@ -1,12 +1,21 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#e0dfd6');
+const backgroundColor = hexToRgb('#615e48');
 const outlineColor = hexToRgb('#483d0e');
 const bodyColor = backgroundColor;
 
+const outlineFadeStart = hexToRgb('#461d1d');
+const outlineFadeEnd = hexToRgb('#e0c0be');
+
+const bodyFadeStart = hexToRgb('#f1f3b8');
+const bodyFadeEnd = hexToRgb('#3e3a22');
+
+const fadeAmount = 0.5;
+const fadePow = 0.9;
+
 export const settings = {
   heightMap: {
-    frequency: 0.45,
+    frequency: 0.35,
     pow: 3
   },
   leaves: {
@@ -77,10 +86,21 @@ export const settings = {
     colors: {
       background: backgroundColor,
       outline: outlineColor,
-      body: bodyColor
+      body: bodyColor,
+
+      bodyFade: {
+        start: bodyFadeStart,
+        end: bodyFadeEnd,
+      },
+      outlineFade: {
+        start: outlineFadeStart,
+        end: outlineFadeEnd
+      },
+      fadeAmount,
+      fadePow
     },
     fade: {
-      amount: 3,
+      amount: 0.3,
       duration: 10000
     }
   }

@@ -2,6 +2,16 @@
 component library - https://articles.wesionary.team/react-component-library-with-vite-and-deploy-in-npm-579c2880d6ff
 
 # Todo
+- [ ] Adapt colors based on...
+  - [X] Noise value
+  - [ ]? Movement direction
+  - [ ]? Actual thickness
+  - [ ]? Attractor proximity
+
+- [ ] Add detail
+  - [ ] Lighter color details
+  - [ ] Randomized rendering (noise, specks, lines)
+
 - [ ] figure out how to handle window resize
   * and how to handle reize in the middle of graph growth?
   * options:
@@ -20,6 +30,7 @@ component library - https://articles.wesionary.team/react-component-library-with
   * should sketch have the same level of detail regardless of screen size?
   * or should it scale, i.e less complexity for smaller screens?
 
-- [ ] if growth doesn't make progress or tries to spawn too many new branches without growing in the right direction, terminate
+- [X] if growth doesn't make progress or tries to spawn too many new branches without growing in the right direction, terminate
   * this may happen if user sets gravity to be contrary to the desired growth direction
   * one way of stopping it is to kill the growth if it does not consume leaves fast enough
+  * FIX: Just make sure max number of steps is set low enough.

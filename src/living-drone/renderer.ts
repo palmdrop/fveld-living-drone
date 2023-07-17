@@ -4,6 +4,7 @@ import { Point } from "../types/point";
 import { lerp, mapLinear } from "../utils/math";
 import { Settings } from "./settings";
 import { Attractor } from "./attractor";
+import { lerpRgb } from "../utils/color";
 
 export const createRenderer = (
   p: p5,
@@ -17,6 +18,10 @@ export const createRenderer = (
 
   let fading = false;
   let fadeStart = p.millis();
+
+  let colorFadeOffset = 0;
+  // TODO: make own function
+  colorFadeOffset = Math.random() * (1 - settings.colors.fadeAmount);
 
   const initDrawLayers = () => {
     lowerLayer = p.createGraphics(p.width, p.height);
@@ -57,37 +62,53 @@ export const createRenderer = (
   ) => {
     if(!parent) return;
 
-    const getThickness = (point: Point) => {
-      const n = heightMap(point) ** settings.thicknessPow;
-      return mapLinear(
-        n,
-        0,
-        1,
-        settings.minThickness,
-        settings.maxThickness,
-      );
-    }
+    const n = heightMap(child.origin);
+    const desiredThickness = mapLinear(
+      n ** settings.thicknessPow,
+      0,
+      1,
+      settings.minThickness,
+      settings.maxThickness,
+    );
 
-    const desiredThickness = getThickness(child.origin);
-
-    if(typeof parent?.metadata?.thickness === 'undefined') {
-      parent.metadata = {
-        thickness: getThickness(parent.origin)
-      }
-    }
-
-    const parentThickness = parent.metadata.thickness as number;
+    const parentThickness = parent.metadata!.thickness as number;
     const thickness = lerp(parentThickness, desiredThickness, settings.thicknessDelta);
 
     child.metadata = {
       thickness
     };
 
+    const colorFade = mapLinear(
+      n ** settings.colors.fadePow, 
+      0,
+      1,
+      // TODO: add support for reversing fade!?
+      colorFadeOffset,
+      colorFadeOffset + settings.colors.fadeAmount
+    );
+
+    const lowerLayerColor = lerpRgb(
+      settings.colors.outlineFade.start,
+      settings.colors.outlineFade.end,
+      colorFade
+    );
+
+    const upperLayerColor = lerpRgb(
+      settings.colors.bodyFade.start,
+      settings.colors.bodyFade.end,
+      colorFade
+    );
+
     // Render lower layer
     lowerLayer.stroke(
+      /*
       settings.colors.outline.r, 
       settings.colors.outline.g, 
       settings.colors.outline.b
+      */
+      lowerLayerColor.r, 
+      lowerLayerColor.g,
+      lowerLayerColor.b,
     );
 
     lowerLayer.strokeWeight(thickness + 2);
@@ -100,10 +121,16 @@ export const createRenderer = (
 
     // Render upper layer
     upperLayer.stroke(
+      /*
       settings.colors.body.r, 
       settings.colors.body.g, 
       settings.colors.body.b
+      */
+      upperLayerColor.r, 
+      upperLayerColor.g,
+      upperLayerColor.b,
     );
+
     upperLayer.strokeWeight(thickness);
     upperLayer.line(
       parent.origin.x, parent.origin.y,
@@ -165,6 +192,8 @@ export const createRenderer = (
 
     fading = true;
     fadeStart = p.millis();
+
+    colorFadeOffset = Math.random() * (1 - settings.colors.fadeAmount);
   }
 
   return {
