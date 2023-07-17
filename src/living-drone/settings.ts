@@ -13,7 +13,7 @@ export const settings = {
     tries: 8,
     minRadius: 3,
     maxRadius: 150,
-    circleRadius: 0.25
+    circleRadius: 0.35
   },
   attractor: {
     min: 0.9,
@@ -38,7 +38,7 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 1000,
+    maxSteps: 300,
     maxChildren: 3,
     mode: 'open',
     minDepth: 1,
@@ -80,7 +80,7 @@ export const settings = {
       body: bodyColor
     },
     fade: {
-      amount: 0,
+      amount: 3,
       duration: 10000
     }
   }

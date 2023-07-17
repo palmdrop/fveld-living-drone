@@ -3,10 +3,12 @@ import { Segment, SpaceColonizationGraph } from "../systems/generation/SpaceColo
 import { Point } from "../types/point";
 import { lerp, mapLinear } from "../utils/math";
 import { Settings } from "./settings";
+import { Attractor } from "./attractor";
 
 export const createRenderer = (
   p: p5,
   heightMap: (point: Point) => number,
+  attractor: Attractor,
   settings: Settings['rendererSettings']
 ) => {
   let baseLayer: p5.Graphics;
@@ -134,6 +136,22 @@ export const createRenderer = (
     p.image(baseLayer, 0, 0);
     p.image(lowerLayer, 0, 0);
     p.image(upperLayer, 0, 0);
+
+    p.fill(
+      settings.colors.background.r,
+      settings.colors.background.g,
+      settings.colors.background.b,
+    );
+    p.stroke(
+      settings.colors.outline.r,
+      settings.colors.outline.g,
+      settings.colors.outline.b,
+    );
+    p.ellipse(
+      attractor.position.x,
+      attractor.position.y,
+      30
+    );
   }
 
   const createNewLayer = () => {

@@ -129,6 +129,7 @@ export const sketch = (p: p5) => {
     renderer = createRenderer(
       p, 
       heightMap, 
+      attractor,
       settings.rendererSettings
     );
   }
@@ -139,14 +140,17 @@ export const sketch = (p: p5) => {
 
 
   let mouseActive = false;
-  p.mousePressed = p.mouseDragged = () => {
-    // graph.setGravityPosition(p.mouseX, p.mouseY);
+  let mouseHeld = false;
+  p.mouseMoved = p.mouseDragged = () => {
     mouseActive = true;
   }
 
+  p.mousePressed = () => {
+    mouseHeld = true;
+  }
+
   p.mouseReleased = () => {
-    // graph.unsetGravityPosition();
-    mouseActive = false;
+    mouseHeld = false;
   }
 
   p.draw = () => {
@@ -167,6 +171,8 @@ export const sketch = (p: p5) => {
         x: p.mouseX,
         y: p.mouseY
       });
+
+      mouseActive = mouseHeld;
     } else {
       const n = p.noise(
         attractor.position.x * settings.attractor.noiseFrequency + settings.attractor.noiseSpeed * p.millis(),
@@ -195,12 +201,5 @@ export const sketch = (p: p5) => {
     }
 
     graph.setGravityPosition(attractor.position.x, attractor.position.y);
-
-    p.stroke(0);
-    p.ellipse(
-      attractor.position.x,
-      attractor.position.y,
-      10
-    );
   }
 }
