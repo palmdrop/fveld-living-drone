@@ -17,9 +17,6 @@ export const createRenderer = (
   let lowerLayer: p5.Graphics;
   let upperLayer: p5.Graphics;
 
-  let fading = false;
-  let fadeStart = p.millis();
-
   let colorFadeOffset = 0;
   // TODO: make own function
   colorFadeOffset = Math.random() * (1 - settings.colors.fadeAmount);
@@ -174,11 +171,6 @@ export const createRenderer = (
       settings.colors.background.g,
       settings.colors.background.b,
     );
-    p.fill(
-      settings.colors.bodyFade[0].r,
-      settings.colors.bodyFade[0].g,
-      settings.colors.bodyFade[0].b,
-    );
     p.ellipse(
       attractor.position.x,
       attractor.position.y,
@@ -192,9 +184,6 @@ export const createRenderer = (
 
     lowerLayer.clear(0, 0, 0, 0);
     upperLayer.clear(0, 0, 0, 0);
-
-    fading = true;
-    fadeStart = p.millis();
 
     colorFadeOffset = Math.random() * (1 - settings.colors.fadeAmount);
   }

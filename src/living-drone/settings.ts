@@ -30,7 +30,7 @@ export const settings = {
   },
   attractor: {
     min: 0.2,
-    max: 1.2,
+    max: 0.8,
     minRange: 1,
     maxRange: 500,
 
@@ -53,7 +53,7 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 500,
+    maxSteps: 1000,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
@@ -69,15 +69,15 @@ export const settings = {
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
       min: 1,
-      max: 1.0
+      max: 0.3
     },
     stepSize: {
-      min: 3.0,
-      max: 10
+      min: 2.0,
+      max: 5
     },
     randomDeviation: {
-      min: 0.6,
-      max: 2.0
+      min: 0.3,
+      max: 1.0
     }
   },
   rendererSettings: {
@@ -93,9 +93,9 @@ export const settings = {
       background: backgroundColor,
       bodyFade,
       outlineFade,
-      fadeAmount: 0.4,
-      fadePow: 0.4,
-      fadeRandom: 0.02
+      fadeAmount: 0.6,
+      fadePow: 0.7,
+      fadeRandom: 0.03
     },
     fade: {
       amount: 0.02,
