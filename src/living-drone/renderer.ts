@@ -4,7 +4,7 @@ import { Point } from "../types/point";
 import { clamp, lerp, mapLinear, random } from "../utils/math";
 import { Settings } from "./settings";
 import { Attractor } from "./attractor";
-import { rgbToHex, sampleGradient } from "../utils/color";
+import { sampleGradient } from "../utils/color";
 
 export const createRenderer = (
   p: p5,
