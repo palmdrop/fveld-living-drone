@@ -1,28 +1,36 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#615e48');
-const outlineColor = hexToRgb('#483d0e');
-const bodyColor = backgroundColor;
+const backgroundColor = hexToRgb('#9f9f80');
 
-const outlineFadeStart = hexToRgb('#461d1d');
-const outlineFadeEnd = hexToRgb('#e0c0be');
+const outlineFade = [
+  hexToRgb('#352121'),
+  hexToRgb('#709c36'),
+  hexToRgb('#1a3921')
+];
 
-const bodyFadeStart = hexToRgb('#f1f3b8');
-const bodyFadeEnd = hexToRgb('#3e3a22');
+const bodyFade = [
+  hexToRgb('#537d68'),
+  hexToRgb('#96393e'),
+  hexToRgb('#74793d'),
+  hexToRgb('#7b6134')
+];
 
-const fadeAmount = 0.5;
-const fadePow = 0.9;
+const fadeAmount = 0.4;
+const fadePow = 0.8;
+const fadeRandom = 0.02;
 
 export const settings = {
   heightMap: {
-    frequency: 0.35,
-    pow: 3
+    frequency: 0.012,
+    pow: 2.0
   },
   leaves: {
     tries: 8,
-    minRadius: 3,
-    maxRadius: 150,
-    circleRadius: 0.35
+    minRadius: 20,
+    maxRadius: 100,
+    // circleRadius: 0.25
+    // circleRadius: 0.5
+    circleRadius: 0.0
   },
   attractor: {
     min: 0.9,
@@ -47,26 +55,26 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 300,
+    maxSteps: 500,
     maxChildren: 3,
     mode: 'open',
     minDepth: 1,
 
     minDistance: {
       min: 10,
-      max: 15,
+      max: 80,
     },
     maxDistance: {
-      min: 100,
-      max: 200
+      min: 150,
+      max: 250
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
       min: 1,
-      max: 0.3
+      max: 0.5
     },
     stepSize: {
-      min: 2.5,
+      min: 3.0,
       max: 10
     },
     randomDeviation: {
@@ -85,22 +93,14 @@ export const settings = {
     },
     colors: {
       background: backgroundColor,
-      outline: outlineColor,
-      body: bodyColor,
-
-      bodyFade: {
-        start: bodyFadeStart,
-        end: bodyFadeEnd,
-      },
-      outlineFade: {
-        start: outlineFadeStart,
-        end: outlineFadeEnd
-      },
+      bodyFade,
+      outlineFade,
       fadeAmount,
-      fadePow
+      fadePow,
+      fadeRandom
     },
     fade: {
-      amount: 0.3,
+      amount: 0,
       duration: 10000
     }
   }

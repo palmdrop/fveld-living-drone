@@ -1,10 +1,10 @@
 import p5 from "p5";
 import { Segment, SpaceColonizationGraph } from "../systems/generation/SpaceColonizationGraph"
 import { Point } from "../types/point";
-import { lerp, mapLinear } from "../utils/math";
+import { clamp, lerp, mapLinear, random } from "../utils/math";
 import { Settings } from "./settings";
 import { Attractor } from "./attractor";
-import { lerpRgb } from "../utils/color";
+import { sampleGradient } from "../utils/color";
 
 export const createRenderer = (
   p: p5,
@@ -33,7 +33,7 @@ export const createRenderer = (
     baseLayer.background(
       settings.colors.background.r,
       settings.colors.background.g,
-      settings.colors.background.b
+      settings.colors.background.b,
     );
   }
 
@@ -75,37 +75,25 @@ export const createRenderer = (
     const thickness = lerp(parentThickness, desiredThickness, settings.thicknessDelta);
 
     child.metadata = {
+      ...child.metadata ?? {},
       thickness
     };
 
-    const colorFade = mapLinear(
-      n ** settings.colors.fadePow, 
+    // TODO: connect fade to thickness instead of underlying noise?
+    const colorFade = clamp(mapLinear(
+      n ** settings.colors.fadePow + random(-settings.colors.fadeRandom, settings.colors.fadeRandom), 
       0,
       1,
       // TODO: add support for reversing fade!?
       colorFadeOffset,
       colorFadeOffset + settings.colors.fadeAmount
-    );
+    ), 0, 1);
 
-    const lowerLayerColor = lerpRgb(
-      settings.colors.outlineFade.start,
-      settings.colors.outlineFade.end,
-      colorFade
-    );
-
-    const upperLayerColor = lerpRgb(
-      settings.colors.bodyFade.start,
-      settings.colors.bodyFade.end,
-      colorFade
-    );
+    const lowerLayerColor = sampleGradient(settings.colors.outlineFade, colorFade);
+    const upperLayerColor = sampleGradient(settings.colors.bodyFade, colorFade);
 
     // Render lower layer
     lowerLayer.stroke(
-      /*
-      settings.colors.outline.r, 
-      settings.colors.outline.g, 
-      settings.colors.outline.b
-      */
       lowerLayerColor.r, 
       lowerLayerColor.g,
       lowerLayerColor.b,
@@ -121,11 +109,6 @@ export const createRenderer = (
 
     // Render upper layer
     upperLayer.stroke(
-      /*
-      settings.colors.body.r, 
-      settings.colors.body.g, 
-      settings.colors.body.b
-      */
       upperLayerColor.r, 
       upperLayerColor.g,
       upperLayerColor.b,
@@ -141,7 +124,11 @@ export const createRenderer = (
   const draw = (graph: SpaceColonizationGraph) => {
     graph.traverse((segment, parent) => {
       // TODO: optimize by keeping a list of the newly added segments, only rendrer these!
-      if(segment.children.length || !parent) return;
+      if(segment.children.length || segment.metadata?.drawed || !parent) return;
+      segment.metadata = {
+        ...segment.metadata ?? {},
+        drawed: true
+      };
 
       renderConnection(parent, segment, lowerLayer, upperLayer);
     });
@@ -162,6 +149,12 @@ export const createRenderer = (
       fading = false;
     }
 
+    p.background(
+      settings.colors.background.r,
+      settings.colors.background.g,
+      settings.colors.background.b
+    );
+
     p.image(baseLayer, 0, 0);
     p.image(lowerLayer, 0, 0);
     p.image(upperLayer, 0, 0);
@@ -171,10 +164,10 @@ export const createRenderer = (
       settings.colors.background.g,
       settings.colors.background.b,
     );
-    p.stroke(
-      settings.colors.outline.r,
-      settings.colors.outline.g,
-      settings.colors.outline.b,
+    p.fill(
+      settings.colors.bodyFade[0].r,
+      settings.colors.bodyFade[0].g,
+      settings.colors.bodyFade[0].b,
     );
     p.ellipse(
       attractor.position.x,

@@ -8,6 +8,14 @@ component library - https://articles.wesionary.team/react-component-library-with
   - [ ]? Actual thickness
   - [ ]? Attractor proximity
 
+- [ ] add randomization to colors
+
+- [ ] animate underlying noise slightly to adapt thickness and color for each layer?
+
+- [X] add support for gradients with more than two colors
+
+- [ ] experiment with hyper-thin, windling lines, soft blobs, watercolor styles, etdc
+
 - [ ] Add detail
   - [ ] Lighter color details
   - [ ] Randomized rendering (noise, specks, lines)

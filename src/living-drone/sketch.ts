@@ -1,4 +1,3 @@
-import { debounce } from 'lodash';
 import p5 from 'p5';
 import { PoissonDiskSampleGenerator } from '../systems/generation/PoissionDiskSampleGenerator';
 import { Point } from '../types/point';
@@ -69,6 +68,7 @@ export const sketch = (p: p5) => {
 
     graph.traverse(segment => {
       segment.metadata = { 
+        ...segment.metadata ?? {},
         thickness: settings.rendererSettings.maxThickness / 10
       }
     })
@@ -82,13 +82,23 @@ export const sketch = (p: p5) => {
 
   const createPointGenerator = () => {
     const radius = getRadius();
+
+    const area = {
+      x: 0,
+      y: 0,
+      w: p.width,
+      h: p.height
+    };
+
+    if(radius) {
+      area.x = p.width / 2 - radius;
+      area.y = p.height / 2 - radius;
+      area.w = 2 * radius;
+      area.h = 2 * radius;
+    } 
+
     return new PoissonDiskSampleGenerator({
-      area: {
-        x: p.width / 2 - radius,
-        y: p.height / 2 - radius,
-        w: 2 * radius,
-        h: 2 * radius,
-      },
+      area,
       heightMap, 
       tries: settings.leaves.tries,
       minRadius: settings.leaves.minRadius,
@@ -134,11 +144,6 @@ export const sketch = (p: p5) => {
     );
   }
 
-  p.windowResized = debounce(() => {
-    //
-  }, 250);
-
-
   let mouseActive = false;
   let mouseHeld = false;
   p.mouseMoved = p.mouseDragged = () => {
@@ -154,12 +159,15 @@ export const sketch = (p: p5) => {
     mouseHeld = false;
   }
 
+  let steps = 0;
   p.draw = () => {
-    if(!graph.isExhausted()) {
+    if(!graph.isExhausted() && steps < settings.growth.maxSteps) {
       graph.grow();
+      steps++;
     } else {
       renderer.createNewLayer();
       graph = createGraph([...points]);
+      steps = 0;
     }
 
     renderer.draw(graph);

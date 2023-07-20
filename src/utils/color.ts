@@ -1,4 +1,4 @@
-import { lerp } from "./math";
+import { clamp, lerp, mapLinear } from "./math";
 
 export type Color = {
   r: number,
@@ -6,6 +6,8 @@ export type Color = {
   b: number,
   a?: number
 }
+
+export type Gradient = Color[];
 
 export const hexToRgb = (hex: string) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -37,4 +39,24 @@ export const lerpRgb = (
     b: lerp(c1.b, c2.b, n),
     a: lerp(c1.a ?? 1.0, c2.a ?? 1.0, n)
   }
+}
+
+export const sampleGradient = (gradient: Gradient, n: number) => {
+  if(!gradient.length) throw new Error('A gradient needs at least one color.');
+  if(gradient.length === 1) return gradient[0];
+
+  const index = clamp(
+    Math.floor(
+      mapLinear(n, 0, 1, 0, gradient.length)
+    ), 
+    0, 
+    gradient.length - 2
+  );
+
+  const c1 = gradient[index];
+  const c2 = gradient[index + 1];
+
+  const lerpAmount = (n % (1.0 / gradient.length)) * gradient.length;
+
+  return lerpRgb(c1, c2, lerpAmount);
 }
