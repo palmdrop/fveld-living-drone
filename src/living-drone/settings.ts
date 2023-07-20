@@ -1,18 +1,18 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#9f9f80');
+const backgroundColor = hexToRgb('#dedebe');
 
 const outlineFade = [
-  hexToRgb('#352121'),
-  hexToRgb('#709c36'),
-  hexToRgb('#1a3921')
+  hexToRgb('#663333'),
+  hexToRgb('#dee1d3'),
+  hexToRgb('#3b5c40')
 ];
 
 const bodyFade = [
-  hexToRgb('#537d68'),
-  hexToRgb('#96393e'),
-  hexToRgb('#74793d'),
-  hexToRgb('#7b6134')
+  hexToRgb('#a8c187'),
+  hexToRgb('#702025'),
+  hexToRgb('#a0a383'),
+  hexToRgb('#9bae88')
 ];
 
 export const settings = {
@@ -81,10 +81,10 @@ export const settings = {
     }
   },
   rendererSettings: {
-    minThickness: 0.5,
-    maxThickness: 130,
-    thicknessPow: 2.0,
-    thicknessDelta: 0.3,
+    minThickness: 0.7,
+    maxThickness: 100,
+    thicknessPow: 2.3,
+    thicknessDelta: 0.4,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -99,8 +99,7 @@ export const settings = {
     },
     fade: {
       amount: 0.02,
-      frequency: 200,
-      duration: 10000
+      frequency: 200
     }
   }
 } as const;

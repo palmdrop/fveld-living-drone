@@ -4,7 +4,7 @@ import { Point } from "../types/point";
 import { clamp, lerp, mapLinear, random } from "../utils/math";
 import { Settings } from "./settings";
 import { Attractor } from "./attractor";
-import { sampleGradient } from "../utils/color";
+import { rgbToHex, sampleGradient } from "../utils/color";
 
 export const createRenderer = (
   p: p5,
@@ -96,6 +96,8 @@ export const createRenderer = (
     const lowerLayerColor = sampleGradient(settings.colors.outlineFade, colorFade);
     const upperLayerColor = sampleGradient(settings.colors.bodyFade, colorFade);
 
+    const lowerLayerContext = lowerLayer.drawingContext as CanvasRenderingContext2D;
+
     // Render lower layer
     lowerLayer.stroke(
       lowerLayerColor.r, 
@@ -104,6 +106,11 @@ export const createRenderer = (
     );
 
     lowerLayer.strokeWeight(thickness + 2);
+    lowerLayerContext.shadowOffsetX = 2;
+    lowerLayerContext.shadowOffsetY = 2;
+    lowerLayerContext.shadowBlur = 5;
+    lowerLayerContext.shadowColor = '#00000013';
+
     lowerLayer.line(
       parent.origin.x, parent.origin.y,
       child.origin.x, child.origin.y,
@@ -140,22 +147,6 @@ export const createRenderer = (
 
   let lastFade = p.millis();
   const render = () => {
-    if(fading && (p.millis() - fadeStart) < settings.fade.duration) {
-      const delta = p.deltaTime / settings.fade.duration;
-      const alpha = 255 * settings.fade.amount * delta
-
-      /*
-      baseLayer.background(
-        settings.colors.background.r,
-        settings.colors.background.g,
-        settings.colors.background.b,
-        alpha
-      );
-      */
-    } else {
-      fading = false;
-    }
-
     const millis = p.millis();
     if((millis - lastFade) > settings.fade.frequency) {
       baseContext.save();
