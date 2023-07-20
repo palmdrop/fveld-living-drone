@@ -12,6 +12,7 @@ export const createRenderer = (
   attractor: Attractor,
   settings: Settings['rendererSettings']
 ) => {
+  let baseContext: CanvasRenderingContext2D;
   let baseLayer: p5.Graphics;
   let lowerLayer: p5.Graphics;
   let upperLayer: p5.Graphics;
@@ -30,11 +31,14 @@ export const createRenderer = (
 
   const initBaseLayer = () => {
     baseLayer = p.createGraphics(p.width, p.height);
+    baseContext = baseLayer.drawingContext as CanvasRenderingContext2D;
+    /*
     baseLayer.background(
       settings.colors.background.r,
       settings.colors.background.g,
       settings.colors.background.b,
     );
+    */
   }
 
   initDrawLayers();
@@ -74,7 +78,7 @@ export const createRenderer = (
     const parentThickness = parent.metadata!.thickness as number;
     const thickness = lerp(parentThickness, desiredThickness, settings.thicknessDelta);
 
-    child.metadata = {
+    child.metadata ={
       ...child.metadata ?? {},
       thickness
     };
@@ -125,7 +129,7 @@ export const createRenderer = (
     graph.traverse((segment, parent) => {
       // TODO: optimize by keeping a list of the newly added segments, only rendrer these!
       if(segment.children.length || segment.metadata?.drawed || !parent) return;
-      segment.metadata = {
+      segment.metadata ={
         ...segment.metadata ?? {},
         drawed: true
       };
@@ -134,19 +138,34 @@ export const createRenderer = (
     });
   }
 
+  let lastFade = p.millis();
   const render = () => {
     if(fading && (p.millis() - fadeStart) < settings.fade.duration) {
       const delta = p.deltaTime / settings.fade.duration;
       const alpha = 255 * settings.fade.amount * delta
 
+      /*
       baseLayer.background(
         settings.colors.background.r,
         settings.colors.background.g,
         settings.colors.background.b,
         alpha
       );
+      */
     } else {
       fading = false;
+    }
+
+    const millis = p.millis();
+    if((millis - lastFade) > settings.fade.frequency) {
+      baseContext.save();
+      baseContext.globalAlpha = settings.fade.amount;
+      baseContext.globalCompositeOperation = 'destination-out';
+      baseContext.fillStyle = `rgb(${settings.colors.background.r}, ${settings.colors.background.g}, ${settings.colors.background.b})`;
+      baseContext.fillRect(0, 0, p.width, p.height);
+      baseContext.restore();
+
+      lastFade = millis;
     }
 
     p.background(

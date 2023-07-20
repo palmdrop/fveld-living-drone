@@ -67,7 +67,7 @@ export const sketch = (p: p5) => {
     );
 
     graph.traverse(segment => {
-      segment.metadata = { 
+      segment.metadata ={ 
         ...segment.metadata ?? {},
         thickness: settings.rendererSettings.maxThickness / 10
       }
@@ -176,10 +176,13 @@ export const sketch = (p: p5) => {
     attractor.update(p.deltaTime / 1000);
 
     if(mouseActive) {
-      attractor.moveTowards({
-        x: p.mouseX,
-        y: p.mouseY
-      });
+      attractor.moveTowards(
+        {
+          x: p.mouseX,
+          y: p.mouseY,
+        },
+        settings.attractor.mouseInfluence
+      );
 
       mouseActive = mouseHeld;
     } else {

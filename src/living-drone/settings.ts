@@ -15,10 +15,6 @@ const bodyFade = [
   hexToRgb('#7b6134')
 ];
 
-const fadeAmount = 0.4;
-const fadePow = 0.8;
-const fadeRandom = 0.02;
-
 export const settings = {
   heightMap: {
     frequency: 0.012,
@@ -27,20 +23,22 @@ export const settings = {
   leaves: {
     tries: 8,
     minRadius: 20,
-    maxRadius: 100,
+    maxRadius: 150,
     // circleRadius: 0.25
     // circleRadius: 0.5
     circleRadius: 0.0
   },
   attractor: {
-    min: 0.9,
-    max: 0.8,
+    min: 0.2,
+    max: 1.2,
     minRange: 1,
-    maxRange: 10,
+    maxRange: 500,
 
     speed: 700,
     maxForce: 2000,
     maxSpeed: 3000,
+    mouseInfluence: 2,
+
     falloffFrom: 100,
     falloff: 2,
 
@@ -56,37 +54,37 @@ export const settings = {
   growth: {
     startPosition: 'fromSeed',
     maxSteps: 500,
-    maxChildren: 3,
+    maxChildren: 2,
     mode: 'open',
     minDepth: 1,
 
     minDistance: {
-      min: 10,
+      min: 3,
       max: 80,
     },
     maxDistance: {
-      min: 150,
-      max: 250
+      min: 80,
+      max: 150
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
       min: 1,
-      max: 0.5
+      max: 1.0
     },
     stepSize: {
       min: 3.0,
       max: 10
     },
     randomDeviation: {
-      min: 0.5,
-      max: 2.5
+      min: 0.6,
+      max: 2.0
     }
   },
   rendererSettings: {
     minThickness: 0.5,
-    maxThickness: 220,
-    thicknessPow: 2.5,
-    thicknessDelta: 0.2,
+    maxThickness: 130,
+    thicknessPow: 2.0,
+    thicknessDelta: 0.3,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -95,12 +93,13 @@ export const settings = {
       background: backgroundColor,
       bodyFade,
       outlineFade,
-      fadeAmount,
-      fadePow,
-      fadeRandom
+      fadeAmount: 0.4,
+      fadePow: 0.4,
+      fadeRandom: 0.02
     },
     fade: {
-      amount: 0,
+      amount: 0.02,
+      frequency: 200,
       duration: 10000
     }
   }

@@ -17,7 +17,7 @@ export const createAttractor = (
       x: 0, y: 0
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    moveTowards: (_point: Point) => { 
+    moveTowards: (_point: Point, _amount?: number) => { 
       // 
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,7 +35,7 @@ export const createAttractor = (
     attractor.acceleration.y += force.y;
   }
 
-  attractor.moveTowards = point => {
+  attractor.moveTowards = (point, amount = 1) => {
     const pointToAttractor = {
       x: point.x - attractor.position.x,
       y: point.y - attractor.position.y,
@@ -47,7 +47,7 @@ export const createAttractor = (
       y: pointToAttractor.y / length
     }
 
-    let speed = attractorConfig.speed;
+    let speed = attractorConfig.speed * amount;
     if(length < attractorConfig.falloffFrom) {
       const n = mapLinear(length, 0, attractorConfig.falloffFrom, 0, 1) ** attractorConfig.falloff;
       speed *= n;
