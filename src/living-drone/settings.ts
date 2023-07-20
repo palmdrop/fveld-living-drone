@@ -1,18 +1,18 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#dedebe');
+const backgroundColor = hexToRgb('#e6e2ce');
 
 const outlineFade = [
-  hexToRgb('#663333'),
-  hexToRgb('#dee1d3'),
-  hexToRgb('#3b5c40')
+  hexToRgb('#442020'),
+  hexToRgb('#3a431c'),
+  hexToRgb('#2f4621')
 ];
 
 const bodyFade = [
-  hexToRgb('#a8c187'),
-  hexToRgb('#702025'),
-  hexToRgb('#a0a383'),
-  hexToRgb('#9bae88')
+  hexToRgb('#c1c2af'),
+  hexToRgb('#b8be96'),
+  hexToRgb('#cdbfbc'),
+  hexToRgb('#c9ce81')
 ];
 
 const attractorColor = hexToRgb('#d6de4f');
@@ -21,20 +21,19 @@ const attractorShadowColor = hexToRgb('#e0e75a');
 export const settings = {
   heightMap: {
     frequency: 0.012,
-    pow: 2.0,
-    speed: 10
+    pow: 2.5
   },
   leaves: {
     tries: 8,
-    minRadius: 40,
-    maxRadius: 150,
-    // circleRadius: 0.25
+    minRadius: 5,
+    maxRadius: 100,
+    circleRadius: 0.25
     // circleRadius: 0.5
-    circleRadius: 0.0
+    // circleRadius: 0.0
   },
   attractor: {
-    min: 0.18,
-    max: 0.45,
+    min: 1.5,
+    max: 2,
     minRange: 1,
     maxRange: 500,
 
@@ -52,23 +51,23 @@ export const settings = {
     noiseAmount: 300,
     noiseSpeed: 0.0001,
 
-    gravityAmount: 0.001,
+    gravityAmount: 0.03,
     gravityFalloff: 1
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 2000,
+    maxSteps: 300,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
 
     minDistance: {
-      min: 5,
-      max: 80,
+      min: 3,
+      max: 10,
     },
     maxDistance: {
-      min: 80,
-      max: 200
+      min: 30,
+      max: 100
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
@@ -80,15 +79,15 @@ export const settings = {
       max: 2
     },
     randomDeviation: {
-      min: 0.1,
-      max: 0.5
+      min: 0.0,
+      max: 3.0
     }
   },
   rendererSettings: {
-    minThickness: 1.7,
+    minThickness: 1,
     maxThickness: 100,
     thicknessPow: 2.3,
-    thicknessDelta: 0.2,
+    thicknessDelta: 0.1,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -102,8 +101,8 @@ export const settings = {
       fadeRandom: 0.03
     },
     fade: {
-      amount: 0.02,
-      frequency: 350
+      amount: 0.005,
+      frequency: 200
     },
     attractor: {
       show: true,

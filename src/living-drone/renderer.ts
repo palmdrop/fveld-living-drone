@@ -103,10 +103,18 @@ export const createRenderer = (
     );
 
     lowerLayer.strokeWeight(thickness + 2);
-    lowerLayerContext.shadowOffsetX = 2;
-    lowerLayerContext.shadowOffsetY = 2;
-    lowerLayerContext.shadowBlur = 5;
-    lowerLayerContext.shadowColor = '#00000013';
+
+    if(Math.random() < 0.95) {
+      lowerLayerContext.shadowOffsetX = 5;
+      lowerLayerContext.shadowOffsetY = 5;
+      lowerLayerContext.shadowBlur = 10;
+      lowerLayerContext.shadowColor = '#8b353128';
+    } else {
+      lowerLayerContext.shadowOffsetX = -10;
+      lowerLayerContext.shadowOffsetY = -10;
+      lowerLayerContext.shadowBlur = 30;
+      lowerLayerContext.shadowColor = '#c3ff00ff';
+    }
 
     lowerLayer.line(
       parent.origin.x, parent.origin.y,
