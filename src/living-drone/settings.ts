@@ -27,13 +27,13 @@ export const settings = {
     tries: 8,
     minRadius: 5,
     maxRadius: 100,
-    circleRadius: 0.25
+    circleRadius: 0.4
     // circleRadius: 0.5
     // circleRadius: 0.0
   },
   attractor: {
-    min: 0.9,
-    max: 1.9,
+    min: 0.8,
+    max: 1.1,
     minRange: 1,
     maxRange: 500,
 
@@ -56,14 +56,14 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 300,
+    maxSteps: 500,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
 
     minDistance: {
-      min: 3,
-      max: 10,
+      min: 2,
+      max: 3,
     },
     maxDistance: {
       min: 30,
@@ -71,8 +71,8 @@ export const settings = {
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
-      min: 0.5,
-      max: 0.25
+      min: 1,
+      max: 0.5
     },
     stepSize: {
       min: 1.0,
@@ -84,9 +84,9 @@ export const settings = {
     }
   },
   rendererSettings: {
-    minThickness: 1,
-    maxThickness: 100,
-    thicknessPow: 2.3,
+    minThickness: 0.0,
+    maxThickness: 140,
+    thicknessPow: 3.0,
     thicknessDelta: 0.1,
     elevation: {
       angle: Math.random() * Math.PI * 2,
@@ -101,7 +101,8 @@ export const settings = {
       fadeRandom: 0.03
     },
     fade: {
-      amount: 0.005,
+      // amount: 0.005,
+      amount: 0.0,
       frequency: 200
     },
     attractor: {
