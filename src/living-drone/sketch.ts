@@ -124,6 +124,8 @@ export const sketch = (p: p5) => {
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
     p.pixelDensity(3);
 
+    p.pixelDensity(3);
+
     poissionDiskSampleGenerator = createPointGenerator();
     poissionDiskSampleGenerator.generate(10000);
 

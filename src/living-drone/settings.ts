@@ -9,10 +9,10 @@ const outlineFade = [
 ];
 
 const bodyFade = [
-  hexToRgb('#c1c2af'),
-  hexToRgb('#b8be96'),
-  hexToRgb('#cdbfbc'),
-  hexToRgb('#c9ce81')
+  hexToRgb('#e3e4ce'),
+  hexToRgb('#d5dab9'),
+  hexToRgb('#e7d8d5'),
+  hexToRgb('#dfe3b2')
 ];
 
 const attractorColor = hexToRgb('#d6de4f');
@@ -32,8 +32,8 @@ export const settings = {
     // circleRadius: 0.0
   },
   attractor: {
-    min: 1.5,
-    max: 2,
+    min: 0.9,
+    max: 1.9,
     minRange: 1,
     maxRange: 500,
 
@@ -47,12 +47,12 @@ export const settings = {
 
     friction: 1,
 
-    noiseFrequency: 0.0003,
-    noiseAmount: 300,
-    noiseSpeed: 0.0001,
+    noiseFrequency: 0.00005,
+    noiseAmount: 1000,
+    noiseSpeed: 0.001,
 
-    gravityAmount: 0.03,
-    gravityFalloff: 1
+    gravityAmount: 0.04,
+    gravityFalloff: 0.5,
   },
   growth: {
     startPosition: 'fromSeed',
