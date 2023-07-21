@@ -33,8 +33,8 @@ export const settings = {
     circleRadius: 0.0
   },
   attractor: {
-    min: 0.2,
-    max: 0.8,
+    min: 0.18,
+    max: 0.45,
     minRange: 1,
     maxRange: 500,
 
@@ -57,7 +57,7 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 1000,
+    maxSteps: 2000,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
@@ -72,23 +72,23 @@ export const settings = {
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
-      min: 1,
-      max: 0.3
+      min: 0.5,
+      max: 0.25
     },
     stepSize: {
-      min: 2.0,
-      max: 5
+      min: 1.0,
+      max: 2
     },
     randomDeviation: {
-      min: 0.3,
-      max: 1.0
+      min: 0.1,
+      max: 0.5
     }
   },
   rendererSettings: {
     minThickness: 1.7,
     maxThickness: 100,
     thicknessPow: 2.3,
-    thicknessDelta: 0.4,
+    thicknessDelta: 0.2,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -112,7 +112,6 @@ export const settings = {
       shadowBlur: 50,
       size: 30
     }
-
   }
 } as const;
 
