@@ -20,8 +20,9 @@ const attractorShadowColor = hexToRgb('#e0e75a');
 
 export const settings = {
   heightMap: {
-    frequency: 0.012,
-    pow: 2.5
+    frequency: 0.008,
+    pow: 2.0,
+    speed: 3
   },
   leaves: {
     tries: 8,
@@ -75,19 +76,19 @@ export const settings = {
       max: 0.5
     },
     stepSize: {
-      min: 1.0,
-      max: 2
+      min: 2.0,
+      max: 5
     },
     randomDeviation: {
       min: 0.0,
-      max: 3.0
+      max: 0.0
     }
   },
   rendererSettings: {
     minThickness: 0.0,
     maxThickness: 140,
-    thicknessPow: 3.0,
-    thicknessDelta: 0.1,
+    thicknessPow: 2.5,
+    thicknessDelta: 0.2,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -106,7 +107,7 @@ export const settings = {
       frequency: 200
     },
     attractor: {
-      show: true,
+      show: false,
       color: attractorColor,
       shadowColor: attractorShadowColor,
       shadowBlur: 50,
