@@ -4,7 +4,9 @@ component library - https://articles.wesionary.team/react-component-library-with
 # Todo
 - [ ] Adapt colors based on...
   - [X] Noise value
-  - [ ]? Movement direction
+  - [ ] Movement direction
+    * draw light outline "above"
+    * and dark outline "below"
   - [ ]? Actual thickness
   - [ ]? Attractor proximity
 

@@ -2,7 +2,7 @@ import p5 from 'p5';
 import { PoissonDiskSampleGenerator } from '../systems/generation/PoissionDiskSampleGenerator';
 import { Point } from '../types/point';
 import { SpaceColonizationGraph } from '../systems/generation/SpaceColonizationGraph';
-import { lengthOfVector, mapLinear, randomUnitVector } from '../utils/math';
+import { Area, lengthOfVector, mapLinear, randomUnitVector } from '../utils/math';
 import { Renderer, createRenderer } from './renderer';
 import { settings } from './settings';
 import { randomElement } from '../utils/array';
@@ -83,19 +83,23 @@ export const sketch = (p: p5) => {
   const createPointGenerator = () => {
     const radius = getRadius();
 
-    const area = {
-      x: 0,
-      y: 0,
-      w: p.width,
-      h: p.height
-    };
+    let area: Area;
 
     if(radius) {
-      area.x = p.width / 2 - radius;
-      area.y = p.height / 2 - radius;
-      area.w = 2 * radius;
-      area.h = 2 * radius;
-    } 
+      area = {
+        x: p.width / 2 - radius,
+        y: p.height / 2 - radius,
+        w: 2 * radius,
+        h: 2 * radius,
+      };
+    } else {
+      area = {
+        x: 0,
+        y: 0,
+        w: p.width,
+        h: p.height,
+      }
+    }
 
     return new PoissonDiskSampleGenerator({
       area,
