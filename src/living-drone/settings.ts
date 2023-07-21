@@ -15,10 +15,14 @@ const bodyFade = [
   hexToRgb('#9bae88')
 ];
 
+const attractorColor = hexToRgb('#d6de4f');
+const attractorShadowColor = hexToRgb('#e0e75a');
+
 export const settings = {
   heightMap: {
     frequency: 0.012,
-    pow: 2.0
+    pow: 2.0,
+    speed: 10
   },
   leaves: {
     tries: 8,
@@ -81,7 +85,7 @@ export const settings = {
     }
   },
   rendererSettings: {
-    minThickness: 0.7,
+    minThickness: 1.7,
     maxThickness: 100,
     thicknessPow: 2.3,
     thicknessDelta: 0.4,
@@ -99,8 +103,16 @@ export const settings = {
     },
     fade: {
       amount: 0.02,
-      frequency: 200
+      frequency: 350
+    },
+    attractor: {
+      show: true,
+      color: attractorColor,
+      shadowColor: attractorShadowColor,
+      shadowBlur: 50,
+      size: 30
     }
+
   }
 } as const;
 

@@ -125,8 +125,8 @@ export const limitVector = (vector: Point, maxLength: number) => {
   const length = lengthOfVector(vector);
   if(length > maxLength) {
     normalizeVector(vector);
-    vector.x * maxLength;
-    vector.y * maxLength;
+    vector.x *= maxLength;
+    vector.y *= maxLength;
   }
 
   return vector;

@@ -4,7 +4,7 @@ import { Point } from "../types/point";
 import { clamp, lerp, mapLinear, random } from "../utils/math";
 import { Settings } from "./settings";
 import { Attractor } from "./attractor";
-import { sampleGradient } from "../utils/color";
+import { rgbToHex, sampleGradient } from "../utils/color";
 
 export const createRenderer = (
   p: p5,
@@ -166,16 +166,33 @@ export const createRenderer = (
     p.image(lowerLayer, 0, 0);
     p.image(upperLayer, 0, 0);
 
-    p.fill(
-      settings.colors.background.r,
-      settings.colors.background.g,
-      settings.colors.background.b,
-    );
-    p.ellipse(
-      attractor.position.x,
-      attractor.position.y,
-      30
-    );
+    if(settings.attractor.show) {
+      p.fill(
+        settings.attractor.color.r,
+        settings.attractor.color.g,
+        settings.attractor.color.b
+      );
+
+      p.noStroke();
+      const drawingContext = p.drawingContext as CanvasRenderingContext2D;
+      drawingContext.save();
+      drawingContext.shadowBlur = settings.attractor.shadowBlur;
+      drawingContext.shadowOffsetX = 0;
+      drawingContext.shadowOffsetY = 0;
+      drawingContext.shadowColor = rgbToHex(
+        settings.attractor.shadowColor.r,
+        settings.attractor.shadowColor.g,
+        settings.attractor.shadowColor.b
+      );
+
+      p.ellipse(
+        attractor.position.x,
+        attractor.position.y,
+        settings.attractor.size
+      );
+
+      drawingContext.restore();
+    }
   }
 
   const createNewLayer = () => {

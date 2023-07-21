@@ -19,7 +19,7 @@ export const sketch = (p: p5) => {
   const heightMap = (point: Point) => {
     return p.noise(
       point.x * settings.heightMap.frequency, 
-      point.y * settings.heightMap.frequency
+      (point.y + settings.heightMap.speed * p.millis() / 1000) * settings.heightMap.frequency
     ) ** settings.heightMap.pow;
   }
 
@@ -118,16 +118,21 @@ export const sketch = (p: p5) => {
 
     p.smooth();
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
+    p.pixelDensity(3);
 
     poissionDiskSampleGenerator = createPointGenerator();
     poissionDiskSampleGenerator.generate(10000);
 
-    const radius = poissionDiskSampleGenerator.area.w / 2;
-    const cX = poissionDiskSampleGenerator.area.x + poissionDiskSampleGenerator.area.w / 2;
-    const cY = poissionDiskSampleGenerator.area.y + poissionDiskSampleGenerator.area.h / 2;
-    points = poissionDiskSampleGenerator.points.filter(
-      point => ((point.x - cX) ** 2 + (point.y - cY) ** 2) < (radius ** 2)
-    );
+    const radius = getRadius();
+    if(radius) {
+      const cX = poissionDiskSampleGenerator.area.x + poissionDiskSampleGenerator.area.w / 2;
+      const cY = poissionDiskSampleGenerator.area.y + poissionDiskSampleGenerator.area.h / 2;
+      points = poissionDiskSampleGenerator.points.filter(
+        point => ((point.x - cX) ** 2 + (point.y - cY) ** 2) < (radius ** 2)
+      );
+    } else {
+      points = poissionDiskSampleGenerator.points;
+    }
 
     graph = createGraph([...points]);
 
