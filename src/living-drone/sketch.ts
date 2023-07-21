@@ -169,7 +169,12 @@ export const sketch = (p: p5) => {
   }
 
   let steps = 0;
+  // Delta is limited to avoid strange issues when the browser window is out of focus
+  const maxDelta = 1 / 20;
+
   p.draw = () => {
+    const delta = Math.min(p.deltaTime / 1000, maxDelta);
+
     if(!graph.isExhausted() && steps < settings.growth.maxSteps) {
       graph.grow();
       steps++;
@@ -182,7 +187,7 @@ export const sketch = (p: p5) => {
     renderer.draw(graph);
     renderer.render();
 
-    attractor.update(p.deltaTime / 1000);
+    attractor.update(delta);
 
     if(mouseActive) {
       attractor.moveTowards(

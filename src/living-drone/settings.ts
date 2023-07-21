@@ -26,7 +26,7 @@ export const settings = {
   },
   leaves: {
     tries: 8,
-    minRadius: 20,
+    minRadius: 40,
     maxRadius: 150,
     // circleRadius: 0.25
     // circleRadius: 0.5
@@ -38,9 +38,9 @@ export const settings = {
     minRange: 1,
     maxRange: 500,
 
-    speed: 700,
+    speed: 500,
     maxForce: 2000,
-    maxSpeed: 3000,
+    maxSpeed: 500,
     mouseInfluence: 2,
 
     falloffFrom: 100,
@@ -63,12 +63,12 @@ export const settings = {
     minDepth: 1,
 
     minDistance: {
-      min: 3,
+      min: 5,
       max: 80,
     },
     maxDistance: {
       min: 80,
-      max: 150
+      max: 200
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
