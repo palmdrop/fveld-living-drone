@@ -61,7 +61,11 @@ export const sketch = (p: p5) => {
     graph.generate(
       points,
       poissionDiskSampleGenerator.area,
-      randomElement(points),
+      // randomElement(points),
+      {
+        x: p.width / 2,
+        y: p.height / 2,
+      },
       randomUnitVector(),
       1
     );
@@ -168,6 +172,12 @@ export const sketch = (p: p5) => {
 
   p.mouseReleased = () => {
     mouseHeld = false;
+  }
+  
+  p.keyPressed = () => {
+    if(p.key === 'd') {
+      p.saveCanvas('livingDrone', 'png');
+    }
   }
 
   let steps = 0;

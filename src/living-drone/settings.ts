@@ -1,34 +1,49 @@
 import { hexToRgb } from "../utils/color";
 
+/*
 const backgroundColor = hexToRgb('#e6e2ce');
-
 const outlineFade = [
   hexToRgb('#442020'),
   hexToRgb('#3a431c'),
   hexToRgb('#2f4621')
 ];
-
 const bodyFade = [
   hexToRgb('#e3e4ce'),
-  hexToRgb('#d5dab9'),
+  hexToRgb('#d8dabf'),
   hexToRgb('#e7d8d5'),
-  hexToRgb('#dfe3b2')
+  hexToRgb('#dfe2bc')
 ];
-
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
+*/
+const backgroundColor = hexToRgb('#57554b');
+const outlineFade = [
+  hexToRgb('#766b33'),
+  hexToRgb('#807851'),
+  hexToRgb('#b1ab90'),
+];
+const bodyFade = [
+  hexToRgb('#57554b'),
+  hexToRgb('#57554b'),
+  hexToRgb('#57554b'),
+];
+const attractorColor = hexToRgb('#d6de4f');
+const attractorShadowColor = hexToRgb('#e0e75a');
+
+const mainShadowColor = '#5d323054';
+const secondaryShadowColor = '#c8ff00ff';
 
 export const settings = {
   heightMap: {
     frequency: 0.008,
-    pow: 2.0,
+    pow: 2.3,
     speed: 3
   },
   leaves: {
     tries: 8,
     minRadius: 5,
     maxRadius: 100,
-    circleRadius: 0.4
+    circleRadius: 0.0
     // circleRadius: 0.5
     // circleRadius: 0.0
   },
@@ -57,14 +72,14 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 500,
+    maxSteps: 380,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
 
     minDistance: {
-      min: 2,
-      max: 3,
+      min: 5,
+      max: 10,
     },
     maxDistance: {
       min: 30,
@@ -85,10 +100,10 @@ export const settings = {
     }
   },
   rendererSettings: {
-    minThickness: 0.0,
+    minThickness: 1.0,
     maxThickness: 140,
     thicknessPow: 2.5,
-    thicknessDelta: 0.2,
+    thicknessDelta: 0.1,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -99,12 +114,26 @@ export const settings = {
       outlineFade,
       fadeAmount: 0.6,
       fadePow: 0.7,
-      fadeRandom: 0.03
+      fadeRandom: 0.0,
+
+      mainShadowProportion: 0.98, 
+      mainShadow: {
+        offsetX: 10,
+        offsetY: 10,
+        blur: 15,
+        color: mainShadowColor
+      },
+      secondaryShadow: {
+        offsetX: -30,
+        offsetY: -30,
+        blur: 70,
+        color: secondaryShadowColor
+      }
     },
     fade: {
-      // amount: 0.005,
-      amount: 0.0,
-      frequency: 200
+      amount: 0.005,
+      // amount: 0.0,
+      frequency: 300
     },
     attractor: {
       show: false,

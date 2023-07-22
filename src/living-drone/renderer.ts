@@ -104,16 +104,16 @@ export const createRenderer = (
 
     lowerLayer.strokeWeight(thickness + 2);
 
-    if(Math.random() < 0.95) {
-      lowerLayerContext.shadowOffsetX = 5;
-      lowerLayerContext.shadowOffsetY = 5;
-      lowerLayerContext.shadowBlur = 10;
-      lowerLayerContext.shadowColor = '#8b353128';
+    if(Math.random() < settings.colors.mainShadowProportion) {
+      lowerLayerContext.shadowOffsetX = settings.colors.mainShadow.offsetX;
+      lowerLayerContext.shadowOffsetY = settings.colors.mainShadow.offsetY;
+      lowerLayerContext.shadowBlur = settings.colors.mainShadow.blur;
+      lowerLayerContext.shadowColor = settings.colors.mainShadow.color;
     } else {
-      lowerLayerContext.shadowOffsetX = -10;
-      lowerLayerContext.shadowOffsetY = -10;
-      lowerLayerContext.shadowBlur = 30;
-      lowerLayerContext.shadowColor = '#c3ff00ff';
+      lowerLayerContext.shadowOffsetX = settings.colors.secondaryShadow.offsetX;
+      lowerLayerContext.shadowOffsetY = settings.colors.secondaryShadow.offsetY;
+      lowerLayerContext.shadowBlur = settings.colors.secondaryShadow.blur;
+      lowerLayerContext.shadowColor = settings.colors.secondaryShadow.color;
     }
 
     lowerLayer.line(

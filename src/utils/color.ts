@@ -41,7 +41,7 @@ export const lerpRgb = (
   }
 }
 
-export const sampleGradient = (gradient: Gradient, n: number) => {
+export const sampleGradient = (gradient: Gradient, n: number): Color => {
   if(!gradient.length) throw new Error('A gradient needs at least one color.');
   if(gradient.length === 1) return gradient[0];
 
