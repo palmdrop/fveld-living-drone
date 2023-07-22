@@ -18,9 +18,9 @@ const attractorShadowColor = hexToRgb('#e0e75a');
 */
 const backgroundColor = hexToRgb('#57554b');
 const outlineFade = [
-  hexToRgb('#766b33'),
-  hexToRgb('#807851'),
-  hexToRgb('#b1ab90'),
+  hexToRgb('#9b936b'),
+  hexToRgb('#b1aa8b'),
+  hexToRgb('#ded0cc'),
 ];
 const bodyFade = [
   hexToRgb('#57554b'),
@@ -30,7 +30,7 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#5d323054';
+const mainShadowColor = '#5d303054';
 const secondaryShadowColor = '#c8ff00ff';
 
 export const settings = {
@@ -72,7 +72,7 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 380,
+    maxSteps: 280,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
