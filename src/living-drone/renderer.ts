@@ -110,18 +110,30 @@ export const createRenderer = (
       lowerLayerContext.shadowBlur = settings.colors.mainShadow.blur;
       lowerLayerContext.shadowColor = settings.colors.mainShadow.color;
     } else {
-      lowerLayerContext.shadowOffsetX = settings.colors.secondaryShadow.offsetX;
-      lowerLayerContext.shadowOffsetY = settings.colors.secondaryShadow.offsetY;
-      lowerLayerContext.shadowBlur = settings.colors.secondaryShadow.blur;
-      lowerLayerContext.shadowColor = settings.colors.secondaryShadow.color;
+      lowerLayerContext.shadowOffsetX = settings.colors.highlightShadow.offsetX;
+      lowerLayerContext.shadowOffsetY = settings.colors.highlightShadow.offsetY;
+      lowerLayerContext.shadowBlur = settings.colors.highlightShadow.blur;
+      lowerLayerContext.shadowColor = settings.colors.highlightShadow.color;
     }
 
-    lowerLayer.line(
-      parent.origin.x, parent.origin.y,
-      child.origin.x, child.origin.y,
-    );
+    const renderToLowerLayer = () => {
+      lowerLayer.line(
+        parent.origin.x, parent.origin.y,
+        child.origin.x, child.origin.y,
+      );
+    }
 
-    // TODO: render additional steps
+    renderToLowerLayer();
+
+    lowerLayerContext.shadowOffsetX = settings.colors.secondaryShadow.offsetX;
+    lowerLayerContext.shadowOffsetY = settings.colors.secondaryShadow.offsetY;
+    lowerLayerContext.shadowBlur = settings.colors.secondaryShadow.blur;
+    lowerLayerContext.shadowColor = settings.colors.secondaryShadow.color;
+
+    renderToLowerLayer();
+
+
+    // INSET SHADOW
 
     // Render upper layer
     upperLayer.stroke(
@@ -131,6 +143,7 @@ export const createRenderer = (
     );
 
     upperLayer.strokeWeight(thickness);
+
     upperLayer.line(
       parent.origin.x, parent.origin.y,
       child.origin.x, child.origin.y,

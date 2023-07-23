@@ -16,22 +16,19 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 */
-const backgroundColor = hexToRgb('#57554b');
+const backgroundColor = hexToRgb('#323029');
 const outlineFade = [
-  hexToRgb('#9b936b'),
-  hexToRgb('#b1aa8b'),
-  hexToRgb('#ded0cc'),
+  hexToRgb('#555547'),
 ];
 const bodyFade = [
-  hexToRgb('#57554b'),
-  hexToRgb('#57554b'),
-  hexToRgb('#57554b'),
+  backgroundColor
 ];
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#5d303054';
-const secondaryShadowColor = '#c8ff00ff';
+const mainShadowColor = '#25230840';
+const secondaryShadowColor = '#cde2aa19';
+const highlightShadowColor = '#ff6200ff';
 
 export const settings = {
   heightMap: {
@@ -42,13 +39,13 @@ export const settings = {
   leaves: {
     tries: 8,
     minRadius: 5,
-    maxRadius: 100,
-    circleRadius: 0.0
-    // circleRadius: 0.5
+    maxRadius: 150,
+    // circleRadius: 0.0
+    circleRadius: 0.3
     // circleRadius: 0.0
   },
   attractor: {
-    min: 0.8,
+    min: 0.7,
     max: 1.1,
     minRange: 1,
     maxRange: 500,
@@ -72,7 +69,7 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 280,
+    maxSteps: 380,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
@@ -101,7 +98,7 @@ export const settings = {
   },
   rendererSettings: {
     minThickness: 1.0,
-    maxThickness: 140,
+    maxThickness: 100,
     thicknessPow: 2.5,
     thicknessDelta: 0.1,
     elevation: {
@@ -124,15 +121,21 @@ export const settings = {
         color: mainShadowColor
       },
       secondaryShadow: {
+        offsetX: -10,
+        offsetY: -10,
+        blur: 10,
+        color: secondaryShadowColor
+      },
+      highlightShadow: {
         offsetX: -30,
         offsetY: -30,
         blur: 70,
-        color: secondaryShadowColor
+        color: highlightShadowColor
       }
     },
     fade: {
-      amount: 0.005,
-      // amount: 0.0,
+      // amount: 0.005,
+      amount: 0.0,
       frequency: 300
     },
     attractor: {

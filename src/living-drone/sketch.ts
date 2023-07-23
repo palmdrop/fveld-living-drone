@@ -61,11 +61,13 @@ export const sketch = (p: p5) => {
     graph.generate(
       points,
       poissionDiskSampleGenerator.area,
-      // randomElement(points),
+      randomElement(points),
+      /*
       {
         x: p.width / 2,
         y: p.height / 2,
       },
+      */
       randomUnitVector(),
       1
     );
@@ -126,8 +128,6 @@ export const sketch = (p: p5) => {
 
     p.smooth();
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
-    p.pixelDensity(3);
-
     p.pixelDensity(3);
 
     poissionDiskSampleGenerator = createPointGenerator();
