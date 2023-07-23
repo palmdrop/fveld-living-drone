@@ -16,9 +16,10 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 */
-const backgroundColor = hexToRgb('#323029');
+const backgroundColor = hexToRgb('#5f5a52');
 const outlineFade = [
-  hexToRgb('#555547'),
+  // backgroundColor,
+  hexToRgb('#6d6d60'),
 ];
 const bodyFade = [
   backgroundColor
@@ -26,9 +27,9 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#25230840';
-const secondaryShadowColor = '#cde2aa19';
-const highlightShadowColor = '#ff6200ff';
+const mainShadowColor = '#320e0e35';
+const secondaryShadowColor = '#c6fe8a0c';
+const highlightShadowColor = '#ff9900ff';
 
 export const settings = {
   heightMap: {
@@ -39,9 +40,9 @@ export const settings = {
   leaves: {
     tries: 8,
     minRadius: 5,
-    maxRadius: 150,
+    maxRadius: 130,
     // circleRadius: 0.0
-    circleRadius: 0.3
+    circleRadius: 0.35
     // circleRadius: 0.0
   },
   attractor: {
@@ -98,9 +99,9 @@ export const settings = {
   },
   rendererSettings: {
     minThickness: 1.0,
-    maxThickness: 100,
+    maxThickness: 150,
     thicknessPow: 2.5,
-    thicknessDelta: 0.1,
+    thicknessDelta: 0.2,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
