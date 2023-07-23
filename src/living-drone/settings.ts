@@ -16,10 +16,10 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 */
-const backgroundColor = hexToRgb('#5f5a52');
+const backgroundColor = hexToRgb('#74706b');
 const outlineFade = [
   // backgroundColor,
-  hexToRgb('#6d563f')
+  hexToRgb('#846648')
 ];
 const bodyFade = [
   backgroundColor
@@ -27,9 +27,9 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#370a0a37';
-const secondaryShadowColor = '#fefe8a0c';
-const highlightShadowColor = '#7bff61ff';
+const mainShadowColor = '#370a0a4e';
+const secondaryShadowColor = '#fefe8a19';
+const highlightShadowColor = '#55fa34ff';
 
 export const settings = {
   heightMap: {
