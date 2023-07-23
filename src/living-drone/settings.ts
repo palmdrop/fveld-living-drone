@@ -19,7 +19,7 @@ const attractorShadowColor = hexToRgb('#e0e75a');
 const backgroundColor = hexToRgb('#5f5a52');
 const outlineFade = [
   // backgroundColor,
-  hexToRgb('#6d6d60'),
+  hexToRgb('#6d563f')
 ];
 const bodyFade = [
   backgroundColor
@@ -27,9 +27,9 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#320e0e35';
-const secondaryShadowColor = '#c6fe8a0c';
-const highlightShadowColor = '#ff9900ff';
+const mainShadowColor = '#370a0a37';
+const secondaryShadowColor = '#fefe8a0c';
+const highlightShadowColor = '#7bff61ff';
 
 export const settings = {
   heightMap: {
@@ -98,9 +98,9 @@ export const settings = {
     }
   },
   rendererSettings: {
-    minThickness: 1.0,
+    minThickness: 0.8,
     maxThickness: 150,
-    thicknessPow: 2.5,
+    thicknessPow: 2.8,
     thicknessDelta: 0.2,
     elevation: {
       angle: Math.random() * Math.PI * 2,

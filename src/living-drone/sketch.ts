@@ -61,13 +61,11 @@ export const sketch = (p: p5) => {
     graph.generate(
       points,
       poissionDiskSampleGenerator.area,
-      randomElement(points),
-      /*
+      // randomElement(points),
       {
         x: p.width / 2,
         y: p.height / 2,
       },
-      */
       randomUnitVector(),
       1
     );
@@ -128,7 +126,7 @@ export const sketch = (p: p5) => {
 
     p.smooth();
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
-    p.pixelDensity(3);
+    p.pixelDensity(4);
 
     poissionDiskSampleGenerator = createPointGenerator();
     poissionDiskSampleGenerator.generate(10000);
@@ -199,6 +197,7 @@ export const sketch = (p: p5) => {
     renderer.draw(graph);
     renderer.render();
 
+    /*
     attractor.update(delta);
 
     if(mouseActive) {
@@ -237,7 +236,12 @@ export const sketch = (p: p5) => {
         y: gravityAmount * gravityDirection.y
       });
     }
+    */
 
+    const n = 0.5 * p.millis() / 1000;
+
+    attractor.position.x = Math.cos(n) * 500 + p.width / 2;
+    attractor.position.y = Math.sin(n) * 500 + p.height / 2;
     graph.setGravityPosition(attractor.position.x, attractor.position.y);
   }
 }
