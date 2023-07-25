@@ -1,8 +1,9 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#dfddc7');
+/*
+const backgroundColor = hexToRgb('#dfddc9');
 const outlineFade = [
-  hexToRgb('#7c8615')
+  hexToRgb('#6d7420')
 ];
 
 const bodyFade = [
@@ -15,10 +16,10 @@ const mainShadowColor = '#59603848';
 const secondaryShadowColor = '#a2a98410';
 const highlightShadowColor = '#ff5100ff';
 const mainShadowProportion = 0.98;
-/*
-const backgroundColor = hexToRgb('#74706b');
+*/
+const backgroundColor = hexToRgb('#908677');
 const outlineFade = [
-  hexToRgb('#846648')
+  hexToRgb('#997127')
 ];
 
 const bodyFade = [
@@ -27,12 +28,10 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#370a0a48';
-const secondaryShadowColor = '#fefe8a10';
-const highlightShadowColor = '#55fa34ff';
-const mainShadowProportion = 0.99;
-*/
-
+const mainShadowColor = '#370a0a3c';
+const secondaryShadowColor = '#fefe8a13';
+const highlightShadowColor = '#73ff57ff';
+const mainShadowProportion = 0.975;
 
 export const settings = {
   heightMap: {
@@ -80,10 +79,10 @@ export const settings = {
 
     minDistance: {
       min: 5,
-      max: 10,
+      max: 30,
     },
     maxDistance: {
-      min: 30,
+      min: 50,
       max: 150
     },
     // TODO: make dynamics higher when closer to attractor?
