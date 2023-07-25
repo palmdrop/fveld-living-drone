@@ -56,7 +56,7 @@ export const createRenderer = (
   }
 
   const renderConnection = (
-    parent: Segment | null,
+    parent: Segment | undefined,
     child: Segment,
     lowerLayer: p5.Graphics,
     upperLayer: p5.Graphics
@@ -141,6 +141,11 @@ export const createRenderer = (
       upperLayerColor.g,
       upperLayerColor.b,
     );
+    upperLayer.fill(
+      upperLayerColor.r, 
+      upperLayerColor.g,
+      upperLayerColor.b,
+    );
 
     upperLayer.strokeWeight(thickness);
 
@@ -151,16 +156,17 @@ export const createRenderer = (
   }
 
   const draw = (graph: SpaceColonizationGraph) => {
-    graph.traverse((segment, parent) => {
-      // TODO: optimize by keeping a list of the newly added segments, only rendrer these!
-      if(segment.children.length || segment.metadata?.drawed || !parent) return;
-      segment.metadata ={
-        ...segment.metadata ?? {},
-        drawed: true
-      };
-
-      renderConnection(parent, segment, lowerLayer, upperLayer);
+    /*
+    graph.getSegments().traverseEntries(segmentData => {
+      segmentData.data?.segment.
     });
+    */
+    graph.getSegments().traverseEntries(({ data }) => {
+      if(!data || !data.segment.parent) return;
+      const segment = data.segment;
+      const parent = segment.parent;
+      renderConnection(parent, segment, lowerLayer, upperLayer)
+    })
   }
 
   let lastFade = p.millis();

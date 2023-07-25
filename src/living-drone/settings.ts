@@ -1,35 +1,38 @@
 import { hexToRgb } from "../utils/color";
 
-/*
-const backgroundColor = hexToRgb('#e6e2ce');
+const backgroundColor = hexToRgb('#dfddc7');
 const outlineFade = [
-  hexToRgb('#442020'),
-  hexToRgb('#3a431c'),
-  hexToRgb('#2f4621')
+  hexToRgb('#7c8615')
 ];
-const bodyFade = [
-  hexToRgb('#e3e4ce'),
-  hexToRgb('#d8dabf'),
-  hexToRgb('#e7d8d5'),
-  hexToRgb('#dfe2bc')
-];
-const attractorColor = hexToRgb('#d6de4f');
-const attractorShadowColor = hexToRgb('#e0e75a');
-*/
-const backgroundColor = hexToRgb('#74706b');
-const outlineFade = [
-  // backgroundColor,
-  hexToRgb('#846648')
-];
+
 const bodyFade = [
   backgroundColor
 ];
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#370a0a4e';
-const secondaryShadowColor = '#fefe8a19';
+const mainShadowColor = '#59603848';
+const secondaryShadowColor = '#a2a98410';
+const highlightShadowColor = '#ff5100ff';
+const mainShadowProportion = 0.98;
+/*
+const backgroundColor = hexToRgb('#74706b');
+const outlineFade = [
+  hexToRgb('#846648')
+];
+
+const bodyFade = [
+  backgroundColor
+];
+const attractorColor = hexToRgb('#d6de4f');
+const attractorShadowColor = hexToRgb('#e0e75a');
+
+const mainShadowColor = '#370a0a48';
+const secondaryShadowColor = '#fefe8a10';
 const highlightShadowColor = '#55fa34ff';
+const mainShadowProportion = 0.99;
+*/
+
 
 export const settings = {
   heightMap: {
@@ -39,8 +42,8 @@ export const settings = {
   },
   leaves: {
     tries: 8,
-    minRadius: 5,
-    maxRadius: 130,
+    minRadius: 3,
+    maxRadius: 150,
     // circleRadius: 0.0
     circleRadius: 0.35
     // circleRadius: 0.0
@@ -61,9 +64,9 @@ export const settings = {
 
     friction: 1,
 
-    noiseFrequency: 0.00005,
-    noiseAmount: 1000,
-    noiseSpeed: 0.001,
+    noiseFrequency: 0.01,
+    noiseAmount: 400,
+    noiseSpeed: 0.0001,
 
     gravityAmount: 0.04,
     gravityFalloff: 0.5,
@@ -81,7 +84,7 @@ export const settings = {
     },
     maxDistance: {
       min: 30,
-      max: 100
+      max: 150
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
@@ -98,9 +101,9 @@ export const settings = {
     }
   },
   rendererSettings: {
-    minThickness: 0.8,
-    maxThickness: 150,
-    thicknessPow: 2.8,
+    minThickness: 1.0,
+    maxThickness: 200,
+    thicknessPow: 3.0,
     thicknessDelta: 0.2,
     elevation: {
       angle: Math.random() * Math.PI * 2,
@@ -114,7 +117,7 @@ export const settings = {
       fadePow: 0.7,
       fadeRandom: 0.0,
 
-      mainShadowProportion: 0.98, 
+      mainShadowProportion,
       mainShadow: {
         offsetX: 10,
         offsetY: 10,
@@ -140,6 +143,7 @@ export const settings = {
       frequency: 300
     },
     attractor: {
+      // show: true,
       show: false,
       color: attractorColor,
       shadowColor: attractorShadowColor,

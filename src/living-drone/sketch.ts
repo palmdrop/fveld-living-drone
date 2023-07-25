@@ -189,6 +189,8 @@ export const sketch = (p: p5) => {
       graph.grow();
       steps++;
     } else {
+      // TODO: render "ends" to all leaves, i.e a node tip that makes sure thick lines do not look awkward?
+
       renderer.createNewLayer();
       graph = createGraph([...points]);
       steps = 0;
@@ -197,7 +199,6 @@ export const sketch = (p: p5) => {
     renderer.draw(graph);
     renderer.render();
 
-    /*
     attractor.update(delta);
 
     if(mouseActive) {
@@ -236,12 +237,13 @@ export const sketch = (p: p5) => {
         y: gravityAmount * gravityDirection.y
       });
     }
-    */
 
+    /*
     const n = 0.5 * p.millis() / 1000;
 
     attractor.position.x = Math.cos(n) * 500 + p.width / 2;
     attractor.position.y = Math.sin(n) * 500 + p.height / 2;
+    */
     graph.setGravityPosition(attractor.position.x, attractor.position.y);
   }
 }

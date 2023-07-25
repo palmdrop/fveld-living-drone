@@ -32,6 +32,7 @@ export type Segment = {
   direction : Point,
   position?: Point,
   children : Segment[],
+  parent ?: Segment,
   depth ?: number,
   reverseDepth ?: number,
   metadata ?: Record<string, any>
@@ -87,10 +88,13 @@ export class SpaceColonizationGraph {
   private exhausted = false;
 
   private segments: Quadtree<SegmentData>;
+  private segmentsSet: Set<SegmentData>;
   private root?: Segment;
   private maxDepth?: number;
 
   private gravity?: Gravity;
+
+  previousDeadSegmentData: Set<SegmentData>
 
   constructor( 
     minDistance : ArgumentFunction | number, 
@@ -115,6 +119,8 @@ export class SpaceColonizationGraph {
     this.leaves = [];
     this.consumedLeaves = [];
     this.segments = this._createQuadtree();
+    this.segmentsSet = new Set<SegmentData>();
+    this.previousDeadSegmentData = new Set();
   }
 
   setGravity(gravity: Gravity) {
@@ -151,7 +157,11 @@ export class SpaceColonizationGraph {
     };
 
     this.segments = this._createQuadtree();
-    this.segments.insert( origin, new SegmentData( root, this.maxChildren ) );
+    this.segmentsSet = new Set<SegmentData>();
+
+    const rootSegmentData = new SegmentData( root, this.maxChildren );
+    this.segments.insert( origin, rootSegmentData );
+    this.segmentsSet.add(rootSegmentData);
 
     for( let i = 0; i < iterations && !this.exhausted; i++ ) this.grow();
 
@@ -169,9 +179,13 @@ export class SpaceColonizationGraph {
 
     // Octree of new segments
     const nextSegmentData = this._createQuadtree();
+    const nextSegmentsSet = new Set<SegmentData>();
 
     // All segments that interacted with a leaf (living segments)
     const interactingSegmentData = new Set<SegmentData>();
+
+    // All segments that did not interact with a leaf (dead segments)
+    const deadSegmentData = new Set<SegmentData>();
     
     // Active leafs
     // NOTE: only used for closed mode
@@ -301,6 +315,7 @@ export class SpaceColonizationGraph {
     // If no segment is close enough to a leaf, then the tree is exhausted
     if( !foundOne ) {
       this.exhausted = true;
+      this.previousDeadSegmentData = new Set();
       return true;
     }
 
@@ -309,6 +324,7 @@ export class SpaceColonizationGraph {
       if (segmentData.reached && segmentData.segment.depth! > this.minDepth) {
         if(this.mode !== 'broken-closed') {
           nextSegmentData.insert( segmentData.segment.origin, segmentData );
+          nextSegmentsSet.add(segmentData);
         }
 
         return;
@@ -331,6 +347,7 @@ export class SpaceColonizationGraph {
       const newSegment : Segment = {
         origin: newPosition,
         direction: segmentData.newDirection,
+        parent: segmentData.segment,
         children: [],
         depth: segmentData.segment.depth! + 1
       };
@@ -338,8 +355,13 @@ export class SpaceColonizationGraph {
       segmentData.reset();
       segmentData.segment.children.push( newSegment );
 
+      const newSegmentData = new SegmentData( newSegment, this.maxChildren );
+
       nextSegmentData.insert( segmentData.segment.origin, segmentData );
-      nextSegmentData.insert( newSegment.origin, new SegmentData( newSegment, this.maxChildren ) );
+      nextSegmentData.insert( newSegment.origin, newSegmentData );
+
+      nextSegmentsSet.add(segmentData);
+      nextSegmentsSet.add(newSegmentData);
     } );
 
     // iterate over all leafs that have active segments in their neighborhood
@@ -364,6 +386,7 @@ export class SpaceColonizationGraph {
           const connector : Segment = {
             origin: leaf,
             direction: segmentData.newDirection,
+            parent: segmentData.segment,
             children: [],
             depth: segmentData.segment.depth! + 1
           };
@@ -381,7 +404,16 @@ export class SpaceColonizationGraph {
       return !consumed;
     });
 
+    // deadSegmentData
+    this.segmentsSet.forEach(segmentData => {
+      if(!nextSegmentsSet.has(segmentData)) {
+        deadSegmentData.add(segmentData);
+      }
+    });
+
     this.segments = nextSegmentData;
+    this.segmentsSet = nextSegmentsSet;
+    this.previousDeadSegmentData = deadSegmentData;
 
     return false;
   }
