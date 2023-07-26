@@ -17,9 +17,9 @@ const secondaryShadowColor = '#a2a98410';
 const highlightShadowColor = '#ff5100ff';
 const mainShadowProportion = 0.98;
 */
-const backgroundColor = hexToRgb('#908677');
+const backgroundColor = hexToRgb('#5a4419');
 const outlineFade = [
-  hexToRgb('#997127')
+  hexToRgb('#835220')
 ];
 
 const bodyFade = [
@@ -28,9 +28,9 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#370a0a3c';
-const secondaryShadowColor = '#fefe8a13';
-const highlightShadowColor = '#73ff57ff';
+const mainShadowColor = '#370a0a39';
+const secondaryShadowColor = '#ffde3910';
+const highlightShadowColor = '#bbff00ff';
 const mainShadowProportion = 0.975;
 
 export const settings = {
@@ -42,9 +42,9 @@ export const settings = {
   leaves: {
     tries: 8,
     minRadius: 3,
-    maxRadius: 150,
+    maxRadius: 180,
     // circleRadius: 0.0
-    circleRadius: 0.35
+    circleRadius: 0.5
     // circleRadius: 0.0
   },
   attractor: {
@@ -72,7 +72,7 @@ export const settings = {
   },
   growth: {
     startPosition: 'fromSeed',
-    maxSteps: 380,
+    maxSteps: 280,
     maxChildren: 2,
     mode: 'open',
     minDepth: 1,
@@ -83,7 +83,7 @@ export const settings = {
     },
     maxDistance: {
       min: 50,
-      max: 150
+      max: 130
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
