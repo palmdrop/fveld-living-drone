@@ -1,4 +1,5 @@
 import { hexToRgb } from "../utils/color";
+import { random } from "../utils/math";
 
 /*
 const backgroundColor = hexToRgb('#dfddc9');
@@ -17,7 +18,7 @@ const secondaryShadowColor = '#a2a98410';
 const highlightShadowColor = '#ff5100ff';
 const mainShadowProportion = 0.98;
 */
-const backgroundColor = hexToRgb('#5a4419');
+const backgroundColor = hexToRgb('#624c20');
 const outlineFade = [
   hexToRgb('#835220')
 ];
@@ -31,21 +32,19 @@ const attractorShadowColor = hexToRgb('#e0e75a');
 const mainShadowColor = '#370a0a39';
 const secondaryShadowColor = '#ffde3910';
 const highlightShadowColor = '#bbff00ff';
-const mainShadowProportion = 0.975;
+const mainShadowProportion = 0.985;
 
 export const settings = {
   heightMap: {
-    frequency: 0.008,
+    frequency: random(0.02, 0.004),
     pow: 2.3,
     speed: 3
   },
   leaves: {
     tries: 8,
-    minRadius: 3,
-    maxRadius: 180,
-    // circleRadius: 0.0
+    minRadius: 5,
+    maxRadius: 160,
     circleRadius: 0.5
-    // circleRadius: 0.0
   },
   attractor: {
     min: 0.7,
@@ -79,31 +78,31 @@ export const settings = {
 
     minDistance: {
       min: 5,
-      max: 30,
+      max: 50,
     },
     maxDistance: {
       min: 50,
-      max: 130
+      max: 140
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
       min: 1,
-      max: 0.5
+      max: 0.4
     },
     stepSize: {
-      min: 2.0,
-      max: 5
+      min: 1.5,
+      max: 8
     },
     randomDeviation: {
-      min: 0.0,
-      max: 0.0
+      min: 0.2,
+      max: 0.5
     }
   },
   rendererSettings: {
     minThickness: 1.0,
-    maxThickness: 200,
-    thicknessPow: 3.0,
-    thicknessDelta: 0.2,
+    maxThickness: 150,
+    thicknessPow: 2.1,
+    thicknessDelta: 0.15,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -120,13 +119,13 @@ export const settings = {
       mainShadow: {
         offsetX: 10,
         offsetY: 10,
-        blur: 15,
+        blur: 20,
         color: mainShadowColor
       },
       secondaryShadow: {
         offsetX: -10,
         offsetY: -10,
-        blur: 10,
+        blur: 15,
         color: secondaryShadowColor
       },
       highlightShadow: {
@@ -137,7 +136,7 @@ export const settings = {
       }
     },
     fade: {
-      // amount: 0.005,
+      // amount: 0.008,
       amount: 0.0,
       frequency: 300
     },
