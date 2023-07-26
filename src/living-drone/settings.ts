@@ -100,9 +100,9 @@ export const settings = {
   },
   rendererSettings: {
     minThickness: 1.0,
-    maxThickness: 150,
-    thicknessPow: 2.1,
-    thicknessDelta: 0.15,
+    maxThickness: 130,
+    thicknessPow: 2.4,
+    thicknessDelta: 0.2,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
