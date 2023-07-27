@@ -33,6 +33,24 @@ const mainShadowColor = '#370a0a39';
 const secondaryShadowColor = '#ffde3910';
 const highlightShadowColor = '#bbff00ff';
 const mainShadowProportion = 0.985;
+/*
+const backgroundColor = hexToRgb('#c9d2d2');
+const outlineFade = [
+  hexToRgb('#c9d7d7')
+  // backgroundColor
+];
+
+const bodyFade = [
+  backgroundColor
+];
+const attractorColor = hexToRgb('#d6de4f');
+const attractorShadowColor = hexToRgb('#e0e75a');
+
+const mainShadowColor = '#41455912';
+const secondaryShadowColor = '#dff8df14';
+const highlightShadowColor = '#f01616ff';
+const mainShadowProportion = 1.0;
+*/
 
 export const settings = {
   heightMap: {
