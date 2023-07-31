@@ -50,16 +50,9 @@ export const createRenderer = (
     } = initDrawLayers();
     const newBaseLayer = initBaseLayer();
 
-    const rerenderLayer = (oldLayer: p5.Graphics, newLayer: p5.Graphics) => {
-      // newLayer.imageMode(p.CENTER);
-      // newLayer.image(oldLayer, p.width / 2, p.height / 2);
-      // newLayer.imageMode(p.CORNER);
-      newLayer.image(oldLayer, 0, 0);
-    }
-
-    rerenderLayer(oldBaseLayer, newBaseLayer);
-    rerenderLayer(oldLowerLayer, newLowerLayer);
-    rerenderLayer(oldUpperLayer, newUpperLayer);
+    newBaseLayer.image(oldBaseLayer, 0, 0);
+    newLowerLayer.image(oldLowerLayer, 0, 0);
+    newUpperLayer.image(oldUpperLayer, 0, 0);
 
     p.background(
       settings.colors.background.r,
