@@ -32,6 +32,7 @@ export type Segment = {
   direction : Point,
   position?: Point,
   children : Segment[],
+  parent ?: Segment,
   depth ?: number,
   reverseDepth ?: number,
   metadata ?: Record<string, any>
@@ -331,6 +332,7 @@ export class SpaceColonizationGraph {
       const newSegment : Segment = {
         origin: newPosition,
         direction: segmentData.newDirection,
+        parent: segmentData.segment,
         children: [],
         depth: segmentData.segment.depth! + 1
       };
@@ -365,6 +367,7 @@ export class SpaceColonizationGraph {
             origin: leaf,
             direction: segmentData.newDirection,
             children: [],
+            parent: segmentData.segment,
             depth: segmentData.segment.depth! + 1
           };
 

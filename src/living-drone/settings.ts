@@ -4,7 +4,7 @@ const backgroundColor = hexToRgb('#dedebe');
 
 const outlineFade = [
   hexToRgb('#663333'),
-  hexToRgb('#dee1d3'),
+  hexToRgb('#58642d'),
   hexToRgb('#3b5c40')
 ];
 
@@ -14,6 +14,9 @@ const bodyFade = [
   hexToRgb('#a0a383'),
   hexToRgb('#9bae88')
 ];
+
+
+const shadowColor = '#4311110f';
 
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
@@ -26,7 +29,7 @@ export const settings = {
   },
   leaves: {
     tries: 8,
-    minRadius: 40,
+    minRadius: 30,
     maxRadius: 150,
     // circleRadius: 0.25
     // circleRadius: 0.5
@@ -34,19 +37,19 @@ export const settings = {
   },
   attractor: {
     min: 0.18,
-    max: 0.45,
+    max: 0.47,
     minRange: 1,
     maxRange: 500,
 
-    speed: 500,
+    speed: 1000,
     maxForce: 2000,
-    maxSpeed: 500,
-    mouseInfluence: 2,
+    maxSpeed: 1000,
+    mouseInfluence: 10,
 
     falloffFrom: 100,
     falloff: 2,
 
-    friction: 1,
+    friction: 1.5,
 
     noiseFrequency: 0.0003,
     noiseAmount: 300,
@@ -63,7 +66,7 @@ export const settings = {
     minDepth: 1,
 
     minDistance: {
-      min: 5,
+      min: 20,
       max: 80,
     },
     maxDistance: {
@@ -89,6 +92,7 @@ export const settings = {
     maxThickness: 100,
     thicknessPow: 2.3,
     thicknessDelta: 0.2,
+    outlineThickness: 2,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
@@ -99,14 +103,21 @@ export const settings = {
       outlineFade,
       fadeAmount: 0.6,
       fadePow: 0.7,
-      fadeRandom: 0.03
+      fadeRandom: 0.005,
+
+      shadow: {
+        x: 4,
+        y: 4,
+        blur: 10,
+        color: shadowColor
+      }
     },
     fade: {
       amount: 0.02,
       frequency: 350
     },
     attractor: {
-      show: true,
+      show: false,
       color: attractorColor,
       shadowColor: attractorShadowColor,
       shadowBlur: 50,

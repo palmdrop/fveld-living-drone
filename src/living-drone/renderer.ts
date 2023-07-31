@@ -102,11 +102,11 @@ export const createRenderer = (
       lowerLayerColor.b,
     );
 
-    lowerLayer.strokeWeight(thickness + 2);
-    lowerLayerContext.shadowOffsetX = 2;
-    lowerLayerContext.shadowOffsetY = 2;
-    lowerLayerContext.shadowBlur = 5;
-    lowerLayerContext.shadowColor = '#00000013';
+    lowerLayer.strokeWeight(thickness + settings.outlineThickness);
+    lowerLayerContext.shadowOffsetX = settings.colors.shadow.x;
+    lowerLayerContext.shadowOffsetY = settings.colors.shadow.y;
+    lowerLayerContext.shadowBlur = settings.colors.shadow.blur;
+    lowerLayerContext.shadowColor = settings.colors.shadow.color;
 
     lowerLayer.line(
       parent.origin.x, parent.origin.y,
@@ -130,16 +130,12 @@ export const createRenderer = (
   }
 
   const draw = (graph: SpaceColonizationGraph) => {
-    graph.traverse((segment, parent) => {
-      // TODO: optimize by keeping a list of the newly added segments, only rendrer these!
-      if(segment.children.length || segment.metadata?.drawed || !parent) return;
-      segment.metadata ={
-        ...segment.metadata ?? {},
-        drawed: true
-      };
-
-      renderConnection(parent, segment, lowerLayer, upperLayer);
-    });
+    graph.getSegments().traverseEntries(({ data }) => {
+      if(!data || !data.segment.parent) return;
+      const segment = data.segment;
+      const parent = segment.parent!;
+      renderConnection(parent, segment, lowerLayer, upperLayer)
+    })
   }
 
   let lastFade = p.millis();
