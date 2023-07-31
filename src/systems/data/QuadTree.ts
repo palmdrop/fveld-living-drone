@@ -31,10 +31,10 @@ export class Quadtree<T> {
     this.entries = [];
   }
 
-  insertAll(points: Point[], data: T[] ) {
-    for( let i = 0; i < points.length; i++ ) {
-      let d : T | null = null;
-      if( data ) {
+  insertAll(points: Point[], data: T[]) {
+    for(let i = 0; i < points.length; i++) {
+      let d: T | null = null;
+      if(data) {
         d = data[ i ];
       }
 
@@ -43,7 +43,7 @@ export class Quadtree<T> {
   }
 
   insert(point: Point, data: T | null) {
-    if( !areaPointIntersection(this.area, point)) {
+    if(!areaPointIntersection(this.area, point)) {
       return false;
     }
 
@@ -59,12 +59,12 @@ export class Quadtree<T> {
     } 
     // Subdivide
     else {
-      if( !this.subdivided ) {
+      if(!this.subdivided) {
         this._subdivide();
       }
 
       const node = this._getNode(point);
-      node.insert( point, data );
+      node.insert(point, data);
     }
 
     return true;
@@ -74,8 +74,8 @@ export class Quadtree<T> {
   _getNode(point: Point) {
     const { x, y, w, h } = this.area;
 
-    const ix = Math.floor( 2.0 * ( point.x - x ) / w );
-    const iy = Math.floor( 2.0 * ( point.y - y ) / h );
+    const ix = Math.floor(2.0 * (point.x - x) / w);
+    const iy = Math.floor(2.0 * (point.y - y) / h);
 
     const index = ix + iy * 2;
     const node = this.nodes[ index ];
@@ -85,11 +85,11 @@ export class Quadtree<T> {
   _subdivide() {
     const { x, y, w, h } = this.area;
 
-      for( let cy = 0; cy < 2; cy++ ) 
-        for( let cx = 0; cx < 2; cx++ ) {
+      for(let cy = 0; cy < 2; cy++) 
+        for(let cx = 0; cx < 2; cx++) {
           const area = {
-            x: x + cx * ( w / 2.0 ),
-            y: y + cy * ( h / 2.0 ),
+            x: x + cx * (w / 2.0),
+            y: y + cy * (h / 2.0),
 
             w: w / 2.0,
             h: h / 2.0,
@@ -112,28 +112,28 @@ export class Quadtree<T> {
   // The "found" array holds everything found so far. 
 
   circleQuery(circle: Circle, mode: QueryMode = 'entry', found: unknown[] = []) {
-    if( !this._circleInsideVolume(circle)) {
+    if(!this._circleInsideVolume(circle)) {
       return found;
     }
 
-    const queryModeConverter = ( () => {
-      switch( mode ) {
-        case 'entry': return ( entry : Entry<T> ) => entry;
-        case 'point': return ( entry : Entry<T> ) => entry.point;
-        case 'data': return ( entry : Entry<T> ) => entry.data;
+    const queryModeConverter = (() => {
+      switch(mode) {
+        case 'entry': return (entry: Entry<T>) => entry;
+        case 'point': return (entry: Entry<T>) => entry.point;
+        case 'data': return (entry: Entry<T>) => entry.data;
       }
-    } )();
+    })();
 
 
-    this.entries.forEach( entry => {
+    this.entries.forEach(entry => {
       if(circlePointIntersection(circle, entry.point)) {
-        found.push( queryModeConverter( entry ) );
+        found.push(queryModeConverter(entry));
       }
-    } );
+    });
 
-    this.nodes.forEach( node => {
+    this.nodes.forEach(node => {
       node.circleQuery(circle, mode, found);
-    } );
+    });
 
     return found;
   }
@@ -143,7 +143,7 @@ export class Quadtree<T> {
   getLowestNode(point: Point): Quadtree<T> | undefined {
     if (!areaPointIntersection(this.area, point)) return undefined;
 
-    if( !this.subdivided ) {
+    if(!this.subdivided) {
       return this;
     }
 
@@ -151,28 +151,28 @@ export class Quadtree<T> {
   }
 
   getNodeAtLevel(point: Point, level: number): Quadtree<T> | undefined {
-    if ( !areaPointIntersection( this.area, point ) || level < 0 ) return undefined;
+    if (!areaPointIntersection(this.area, point) || level < 0) return undefined;
 
-    if( !this.subdivided ) {
+    if(!this.subdivided) {
       return this;
     }
 
     return this.nodes.map(node => node.getNodeAtLevel(point, level - 1)).find(node => !!node);
   }
 
-  traverseEntries( callback ?: ( entry : Entry<T>, octree : Quadtree<T> ) => void ) {
-    if( !callback ) return;
-    this.entries.forEach( entry => callback( entry, this ) );
-    this.nodes.forEach( node => node.traverseEntries( callback ) );
+  traverseEntries(callback?: (entry: Entry<T>, octree: Quadtree<T>) => void) {
+    if(!callback) return;
+    this.entries.forEach(entry => callback(entry, this));
+    this.nodes.forEach(node => node.traverseEntries(callback));
   }
 
-  traverseChildren( callback ?: ( node : Quadtree<T> ) => void ) {
-    this.nodes.forEach( node => callback && callback( node ) );
+  traverseChildren(callback?: (node: Quadtree<T>) => void) {
+    this.nodes.forEach(node => callback && callback(node));
   }
 
-  traverseNodes( callback ?: ( node : Quadtree<T> ) => void ) {
-    callback && callback( this );
-    this.nodes.forEach( node => node.traverseNodes( callback ) );
+  traverseNodes(callback?: (node: Quadtree<T>) => void) {
+    callback && callback(this);
+    this.nodes.forEach(node => node.traverseNodes(callback));
   }
 
   getFlattenedNodes() {

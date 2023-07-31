@@ -8,7 +8,7 @@ import { Quadtree } from "../data/QuadTree";
 
 type ArgumentFunction = (value: Point) => number;
 
-const toArgumentFunction = (argument : ArgumentFunction | number) => {
+const toArgumentFunction = (argument: ArgumentFunction | number) => {
   if(typeof argument === 'function') {
     return argument;
   } else {
@@ -16,26 +16,15 @@ const toArgumentFunction = (argument : ArgumentFunction | number) => {
   }
 };
 
-/*
-class Segment {
-  constructor( origin, direction ) {
-    this.origin = origin;
-    this.direction = direction;
-
-    this.children = [];
-  }
-}
-*/
-
 export type Segment = {
-  origin : Point,
-  direction : Point,
+  origin: Point,
+  direction: Point,
   position?: Point,
-  children : Segment[],
-  parent ?: Segment,
-  depth ?: number,
-  reverseDepth ?: number,
-  metadata ?: Record<string, any>
+  children: Segment[],
+  parent?: Segment,
+  depth?: number,
+  reverseDepth?: number,
+  metadata?: Record<string, any>
 }
 
 export type Gravity = {
@@ -94,20 +83,20 @@ export class SpaceColonizationGraph {
   private gravity?: Gravity;
 
   constructor( 
-    minDistance : ArgumentFunction | number, 
-    maxDistance : ArgumentFunction | number, 
-    dynamics : ArgumentFunction | number, 
-    stepSize : ArgumentFunction | number, 
-    randomDeviation : ArgumentFunction | number,
-    private mode : 'open' | 'closed' | 'broken-closed' = 'open',
-    private maxChildren : number = 3,
-    private minDepth : number = 1
+    minDistance: ArgumentFunction | number, 
+    maxDistance: ArgumentFunction | number, 
+    dynamics: ArgumentFunction | number, 
+    stepSize: ArgumentFunction | number, 
+    randomDeviation: ArgumentFunction | number,
+    private mode: 'open' | 'closed' | 'broken-closed' = 'open',
+    private maxChildren: number = 3,
+    private minDepth: number = 1
   ) {
-    this.minDistance = toArgumentFunction( minDistance );
-    this.maxDistance = toArgumentFunction( maxDistance );
-    this.dynamics = toArgumentFunction( dynamics );
-    this.stepSize = toArgumentFunction( stepSize );
-    this.randomDeviation = toArgumentFunction( randomDeviation );
+    this.minDistance = toArgumentFunction(minDistance);
+    this.maxDistance = toArgumentFunction(maxDistance);
+    this.dynamics = toArgumentFunction(dynamics);
+    this.stepSize = toArgumentFunction(stepSize);
+    this.randomDeviation = toArgumentFunction(randomDeviation);
 
     this.area = {
       x: 0, y: 0, w: 0, h: 0
@@ -136,15 +125,15 @@ export class SpaceColonizationGraph {
   }
 
   _createQuadtree() {
-    return new Quadtree<SegmentData>( this.area, 8, 3 );
+    return new Quadtree<SegmentData>(this.area, 8, 3);
   }
 
-  generate( leaves : Point[], area : Area, origin : Point, startDirection : Point, iterations : number ) {
+  generate(leaves: Point[], area: Area, origin: Point, startDirection: Point, iterations: number) {
     this.exhausted = false;
     this.area = area;
     this.leaves = leaves;
 
-    const root : Segment = {
+    const root: Segment = {
       origin, 
       direction: normalizeVector({ ...startDirection }),
       children: [],
@@ -152,9 +141,9 @@ export class SpaceColonizationGraph {
     };
 
     this.segments = this._createQuadtree();
-    this.segments.insert( origin, new SegmentData( root, this.maxChildren ) );
+    this.segments.insert(origin, new SegmentData(root, this.maxChildren));
 
-    for( let i = 0; i < iterations && !this.exhausted; i++ ) this.grow();
+    for(let i = 0; i < iterations && !this.exhausted; i++) this.grow();
 
     this.root = root;
 
@@ -163,7 +152,7 @@ export class SpaceColonizationGraph {
 
   grow() {
     // If the tree is exhausted, do nothing
-    if( this.exhausted ) return true;
+    if(this.exhausted) return true;
 
     // Set true if at least one segment found a leaf to interact with
     let foundOne = false;
@@ -205,26 +194,26 @@ export class SpaceColonizationGraph {
     }
 
     // Iterate over all leaves and check if there's a segment that can interact with it
-    for( let i = this.leaves.length - 1; i >= 0; i-- ) {
+    for(let i = this.leaves.length - 1; i >= 0; i--) {
       const leaf = this.leaves[ i ];
 
       if(this.mode === 'open') {
         // Find the closest segment (within the maxDistance)
-        const closestSegmentData = this._closestSegmentData( leaf );
+        const closestSegmentData = this._closestSegmentData(leaf);
 
         // If none is found, continue to next leaf
-        if( !closestSegmentData ) continue;
+        if(!closestSegmentData) continue;
         foundOne = true;
 
         const segmentOrigin = closestSegmentData.segment.origin;
 
-        const minDistance = this.minDistance( segmentOrigin );
-        const dynamics = this.dynamics( segmentOrigin );
+        const minDistance = this.minDistance(segmentOrigin);
+        const dynamics = this.dynamics(segmentOrigin);
 
         const distSq = distanceToSquared(leaf, segmentOrigin);
 
         // If the segment is sufficiently close to the leaf, remove the leaf
-        if( distSq < minDistance * minDistance ) {
+        if(distSq < minDistance * minDistance) {
           this.consumeLeaf(i);
         } else {
           // Otherwise, prepare for creating a new segment
@@ -246,28 +235,28 @@ export class SpaceColonizationGraph {
           closestSegmentData.newDirection.y += dir.y;
           closestSegmentData.interactions++;
 
-          interactingSegmentData.add( closestSegmentData );
+          interactingSegmentData.add(closestSegmentData);
         }
       } else {
-        const neighborSegments = this._relativeNeighborSegmentData( leaf );
+        const neighborSegments = this._relativeNeighborSegmentData(leaf);
 
         if (neighborSegments.length) {
           interactingLeaves.set(leaf, neighborSegments);
         }
 
-        for( const segmentData of neighborSegments ) {
+        for(const segmentData of neighborSegments) {
           // NOTE: this is wrong, but creates interesting results!
           // if (segmentData.reached) continue;
 
           const segmentOrigin = segmentData.segment.origin;
-          const minDistance = this.minDistance( segmentOrigin );
-          const distSq = distanceToSquared(leaf, segmentOrigin );
+          const minDistance = this.minDistance(segmentOrigin);
+          const distSq = distanceToSquared(leaf, segmentOrigin);
 
           if(distSq < minDistance * minDistance) {
             segmentData.reached = true;
 
-            if( neighborSegments.some( neighbor => !neighbor.reached && !neighbor.segment.children.length )) {
-              interactingSegmentData.add( segmentData );
+            if(neighborSegments.some(neighbor => !neighbor.reached && !neighbor.segment.children.length)) {
+              interactingSegmentData.add(segmentData);
             }
 
             continue;
@@ -275,7 +264,7 @@ export class SpaceColonizationGraph {
 
           if(!segmentData.reached) foundOne = true;
 
-          const dynamics = this.dynamics( segmentOrigin );
+          const dynamics = this.dynamics(segmentOrigin);
 
           // TODO: this could be abstracted to separate function
           const dir = lerpPoints( 
@@ -294,22 +283,22 @@ export class SpaceColonizationGraph {
           segmentData.newDirection.y += dir.y;
           segmentData.interactions++;
 
-          interactingSegmentData.add( segmentData );
+          interactingSegmentData.add(segmentData);
         }
       }
     }
 
     // If no segment is close enough to a leaf, then the tree is exhausted
-    if( !foundOne ) {
+    if(!foundOne) {
       this.exhausted = true;
       return true;
     }
 
     // Iterate over all the segments that interacted with a leaf
-    interactingSegmentData.forEach( segmentData => {
+    interactingSegmentData.forEach(segmentData => {
       if (segmentData.reached && segmentData.segment.depth! > this.minDepth) {
         if(this.mode !== 'broken-closed') {
-          nextSegmentData.insert( segmentData.segment.origin, segmentData );
+          nextSegmentData.insert(segmentData.segment.origin, segmentData);
         }
 
         return;
@@ -317,8 +306,8 @@ export class SpaceColonizationGraph {
 
       segmentData.normalize();
 
-      const randomDeviation = this.randomDeviation( segmentData.segment.origin );
-      const stepSize = this.stepSize( segmentData.segment.origin );
+      const randomDeviation = this.randomDeviation(segmentData.segment.origin);
+      const stepSize = this.stepSize(segmentData.segment.origin);
 
       const newPosition = {
         x: segmentData.segment.origin.x + segmentData.newDirection.x * stepSize,
@@ -329,7 +318,7 @@ export class SpaceColonizationGraph {
       newPosition.x += randomDirection.x * randomDeviation;
       newPosition.y += randomDirection.y * randomDeviation;
 
-      const newSegment : Segment = {
+      const newSegment: Segment = {
         origin: newPosition,
         direction: segmentData.newDirection,
         parent: segmentData.segment,
@@ -338,11 +327,11 @@ export class SpaceColonizationGraph {
       };
             
       segmentData.reset();
-      segmentData.segment.children.push( newSegment );
+      segmentData.segment.children.push(newSegment);
 
-      nextSegmentData.insert( segmentData.segment.origin, segmentData );
-      nextSegmentData.insert( newSegment.origin, new SegmentData( newSegment, this.maxChildren ) );
-    } );
+      nextSegmentData.insert(segmentData.segment.origin, segmentData);
+      nextSegmentData.insert(newSegment.origin, new SegmentData(newSegment, this.maxChildren));
+    });
 
     // iterate over all leafs that have active segments in their neighborhood
     this.leaves = this.leaves.filter(leaf => {
@@ -363,7 +352,7 @@ export class SpaceColonizationGraph {
         if(distToSq <= minDistance * minDistance) {
           oneInKillDistance = true;
 
-          const connector : Segment = {
+          const connector: Segment = {
             origin: leaf,
             direction: segmentData.newDirection,
             children: [],
@@ -389,16 +378,16 @@ export class SpaceColonizationGraph {
     return false;
   }
 
-  _relativeNeighborSegmentData( leaf : Point ) : SegmentData[] {
-    const maxDistance = this.maxDistance( leaf );
+  _relativeNeighborSegmentData(leaf: Point): SegmentData[] {
+    const maxDistance = this.maxDistance(leaf);
 
     const nearbySegments = this.segments.circleQuery(
       { ...leaf, radius: maxDistance },
-    ) as { point : Point, data : SegmentData }[];
+    ) as { point: Point, data: SegmentData }[];
 
-    const relativeNeighbors : SegmentData[] = [];
+    const relativeNeighbors: SegmentData[] = [];
 
-    for( let i = 0; i < nearbySegments.length; i++ ) {
+    for(let i = 0; i < nearbySegments.length; i++) {
       const segment = nearbySegments[i];
 
       if( 
@@ -411,133 +400,133 @@ export class SpaceColonizationGraph {
       const leafToSegmentDistanceSq = distanceToSquared(segment.point, leaf);
 
       // NOTE: could be optimized by caching results and just iterating from j = i
-      for( let j = 0; j < nearbySegments.length; j++ ) {
+      for(let j = 0; j < nearbySegments.length; j++) {
         if(i === j) continue;
 
         const other = nearbySegments[j];
         const leafToOtherDistanceSq = distanceToSquared(other.point, leaf);
 
-        if( leafToOtherDistanceSq > leafToSegmentDistanceSq ) continue;
+        if(leafToOtherDistanceSq > leafToSegmentDistanceSq) continue;
 
         const segmentToOtherDistanceSq = distanceToSquared(segment.point, other.point);
 
-        if( leafToSegmentDistanceSq > segmentToOtherDistanceSq ) {
+        if(leafToSegmentDistanceSq > segmentToOtherDistanceSq) {
           isNeighbor = false;
           break;
         }
       }
 
-      if( isNeighbor ) {
-        relativeNeighbors.push( segment.data );
+      if(isNeighbor) {
+        relativeNeighbors.push(segment.data);
       }
     }
 
     return relativeNeighbors;
   }
 
-  _closestSegmentData( leaf : Point ) : SegmentData | null {
-    let closest : SegmentData | null = null;
+  _closestSegmentData(leaf: Point): SegmentData | null {
+    let closest: SegmentData | null = null;
 
-    const maxDistance = this.maxDistance( leaf );
+    const maxDistance = this.maxDistance(leaf);
 
     const nearbySegmentsData = this.segments.circleQuery( 
       { ...leaf, radius: maxDistance },
-    ) as { point : Point, data : SegmentData }[];
+    ) as { point: Point, data: SegmentData }[];
 
     let minDistSq = maxDistance * maxDistance;
 
-    nearbySegmentsData.forEach( ( { point, data } ) => {
+    nearbySegmentsData.forEach(({ point, data }) => {
       if(
         data.maxChildren &&
         data.segment.children.length >= data.maxChildren
       ) return;
 
-      const distSq = distanceToSquared( leaf, point );
-      if( distSq < minDistSq ) {
+      const distSq = distanceToSquared(leaf, point);
+      if(distSq < minDistSq) {
         closest = data;
         minDistSq = distSq;
       }
-    } );
+    });
 
     return closest;
   }
 
-  traverse( callback : ( segment : Segment, parent : Segment | null, depth : number ) => void ) {
-    const traverseSegment = ( segment : Segment, parent : Segment | null, depth : number ) => {
-      callback( segment, parent, depth );
+  traverse(callback: (segment: Segment, parent: Segment | null, depth: number) => void) {
+    const traverseSegment = (segment: Segment, parent: Segment | null, depth: number) => {
+      callback(segment, parent, depth);
 
-      segment.children.forEach( child => {
-        traverseSegment( child, segment, depth + 1 );
-      } );
+      segment.children.forEach(child => {
+        traverseSegment(child, segment, depth + 1);
+      });
     };
 
-    this.root && traverseSegment( this.root, null, 1 );
+    this.root && traverseSegment(this.root, null, 1);
   }
 
   calculateDepths() {
     // Calculate max depth
     let maxDepth = -1;
 
-    this.traverse( ( segment : Segment, _ : Segment | null, depth : number ) => {
+    this.traverse((segment: Segment, _: Segment | null, depth: number) => {
       // And set the depth of each segment
       segment.depth = depth;
 
-      maxDepth = Math.max( maxDepth, depth );
-    } );
+      maxDepth = Math.max(maxDepth, depth);
+    });
     this.maxDepth = maxDepth;
 
     // Calculate the reverse depth (number of segments from a leaf)
-    const calculateReverseDepth = ( segment : Segment ) => {
+    const calculateReverseDepth = (segment: Segment) => {
       let count = 0;
 
-      segment.children.forEach( child => {
-        count = Math.max( count, calculateReverseDepth( child ) );
-      } );
+      segment.children.forEach(child => {
+        count = Math.max(count, calculateReverseDepth(child));
+      });
 
       segment.reverseDepth = 1 + count;
 
       return segment.reverseDepth;
     };
 
-    this.root && calculateReverseDepth( this.root );
+    this.root && calculateReverseDepth(this.root);
   }
 
-  toSkeleton( threshold : number | ( ( segment : Segment, maxDepth : number ) => number ) ) {
+  toSkeleton(threshold: number | ((segment: Segment, maxDepth: number) => number)) {
     this.calculateDepths();
 
-    let thresholdFunction : ( segment : Segment, maxDepth : number ) => number;
-    if( typeof threshold !== 'function' ) thresholdFunction = () => threshold;
+    let thresholdFunction: (segment: Segment, maxDepth: number) => number;
+    if(typeof threshold !== 'function') thresholdFunction = () => threshold;
     else thresholdFunction = threshold;
 
-    const convert = ( segment : Segment ) => {
+    const convert = (segment: Segment) => {
       let current = segment;
 
       //TODO what to do if segment has multiple children at start?
 
-      if( current.children.length === 0 ) return;
+      if(current.children.length === 0) return;
 
-      if( current.children.length > 1 ) {
-        current.children.forEach( child => {
-          convert( child );
-        } );
+      if(current.children.length > 1) {
+        current.children.forEach(child => {
+          convert(child);
+        });
 
         return;
       }
 
-      while( current.children.length === 1 ) {
+      while(current.children.length === 1) {
         const child = current.children[ 0 ];
 
-        const dotDirection = dot(current.direction, child.direction );
-        const angle = mapLinear( dotDirection, -1, 1, Math.PI * 2, 0 );
+        const dotDirection = dot(current.direction, child.direction);
+        const angle = mapLinear(dotDirection, -1, 1, Math.PI * 2, 0);
 
-        const t = thresholdFunction( child, this.maxDepth || 0 );
+        const t = thresholdFunction(child, this.maxDepth || 0);
 
-        if( angle > t ) {
+        if(angle > t) {
           segment.position = current.position;
           segment.direction = current.direction;
           segment.children = current.children;
 
-          convert( child );
+          convert(child);
           return;
         }
         current = child;
@@ -547,14 +536,14 @@ export class SpaceColonizationGraph {
       segment.direction = current.direction;
       segment.children = current.children;
 
-      convert( segment );
+      convert(segment);
     };
 
-    this.root && convert( this.root );
+    this.root && convert(this.root);
   }
 
   private consumeLeaf(index: number) {
-    const leaf = this.leaves.splice( index, 1 );
+    const leaf = this.leaves.splice(index, 1);
     this.consumedLeaves.push(...leaf);
   }
 

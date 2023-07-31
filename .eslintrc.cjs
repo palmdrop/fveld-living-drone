@@ -24,5 +24,9 @@ module.exports = {
       { allowConstantExport: true },
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
+    "@typescript-eslint/type-annotation-spacing": "error",
+    "space-in-parens": [
+      "error", "never"
+    ]
   },
 }
