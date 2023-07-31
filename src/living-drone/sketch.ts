@@ -7,6 +7,7 @@ import { Renderer, createRenderer } from './renderer';
 import { settings } from './settings';
 import { randomElement } from '../utils/array';
 import { Attractor, createAttractor } from './attractor';
+import { debounce } from '../utils/time';
 
 export const sketch = (p: p5) => {
   let poissionDiskSampleGenerator: PoissonDiskSampleGenerator;
@@ -14,6 +15,7 @@ export const sketch = (p: p5) => {
   let attractor: Attractor;
 
   let renderer: Renderer;
+  let canvas: HTMLCanvasElement;
   let points: Point[];
 
   const heightMap = (point: Point) => {
@@ -116,7 +118,7 @@ export const sketch = (p: p5) => {
 
   p.setup = () => {
     const p5Renderer = p.createCanvas(window.innerWidth, window.innerHeight);
-    const canvas = p5Renderer.elt as HTMLCanvasElement;
+    canvas = p5Renderer.elt as HTMLCanvasElement;
     canvas.style.width = "100vw";
     canvas.style.height = "100vh";
 
@@ -166,6 +168,18 @@ export const sketch = (p: p5) => {
 
   p.mouseReleased = () => {
     mouseHeld = false;
+  }
+
+  const handleResize = debounce(() => {
+    const width = canvas.parentElement?.clientWidth ?? window.innerWidth;
+    const height = canvas.parentElement?.clientHeight ?? window.innerHeight;
+
+    p.resizeCanvas(width, height);
+    renderer.handleResize();
+  }, 300);
+
+  p.windowResized = () => {
+    void handleResize();
   }
 
   let steps = 0;

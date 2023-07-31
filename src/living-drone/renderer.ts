@@ -24,35 +24,48 @@ export const createRenderer = (
   const initDrawLayers = () => {
     lowerLayer = p.createGraphics(p.width, p.height);
     upperLayer = p.createGraphics(p.width, p.height);
+    return {
+      lowerLayer,
+      upperLayer
+    }
   }
 
   const initBaseLayer = () => {
     baseLayer = p.createGraphics(p.width, p.height);
     baseContext = baseLayer.drawingContext as CanvasRenderingContext2D;
-    /*
-    baseLayer.background(
-      settings.colors.background.r,
-      settings.colors.background.g,
-      settings.colors.background.b,
-    );
-    */
+    return baseLayer;
   }
 
   initDrawLayers();
   initBaseLayer();
 
   const handleResize = () => {
-    // TODO
-    /*
     const oldLowerLayer = lowerLayer;
     const oldUpperLayer = upperLayer;
     const oldBaseLayer = baseLayer;
-    */
 
-    initDrawLayers();
-    initBaseLayer();
+    const {
+      lowerLayer: newLowerLayer, 
+      upperLayer: newUpperLayer
+    } = initDrawLayers();
+    const newBaseLayer = initBaseLayer();
 
-    // TODO: render old layers to new layers to preserve contents?
+    const rerenderLayer = (oldLayer: p5.Graphics, newLayer: p5.Graphics) => {
+      // newLayer.imageMode(p.CENTER);
+      // newLayer.image(oldLayer, p.width / 2, p.height / 2);
+      // newLayer.imageMode(p.CORNER);
+      newLayer.image(oldLayer, 0, 0);
+    }
+
+    rerenderLayer(oldBaseLayer, newBaseLayer);
+    rerenderLayer(oldLowerLayer, newLowerLayer);
+    rerenderLayer(oldUpperLayer, newUpperLayer);
+
+    p.background(
+      settings.colors.background.r,
+      settings.colors.background.g,
+      settings.colors.background.b
+    );
   }
 
   const renderConnection = (
