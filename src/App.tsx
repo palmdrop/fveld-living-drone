@@ -3,9 +3,7 @@ import './css/reset.css';
 
 function App() {
   return (
-    <main>
-      <LivingDrone />
-    </main>
+    <LivingDrone />
   )
 }
 
