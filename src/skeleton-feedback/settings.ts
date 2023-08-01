@@ -18,9 +18,9 @@ const secondaryShadowColor = '#a2a98410';
 const highlightShadowColor = '#ff5100ff';
 const mainShadowProportion = 0.98;
 */
-const backgroundColor = hexToRgb('#624c20');
+const backgroundColor = hexToRgb('#443a18');
 const outlineFade = [
-  hexToRgb('#835220')
+  hexToRgb('#5a4822')
 ];
 
 const bodyFade = [
@@ -29,9 +29,9 @@ const bodyFade = [
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
-const mainShadowColor = '#370a0a39';
+const mainShadowColor = '#550e0e39';
 const secondaryShadowColor = '#ffde3910';
-const highlightShadowColor = '#bbff00ff';
+const highlightShadowColor = '#d9ff00ff';
 const mainShadowProportion = 0.985;
 /*
 const backgroundColor = hexToRgb('#c9d2d2');
