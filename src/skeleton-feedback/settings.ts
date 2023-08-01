@@ -18,9 +18,9 @@ const secondaryShadowColor = '#a2a98410';
 const highlightShadowColor = '#ff5100ff';
 const mainShadowProportion = 0.98;
 */
-const backgroundColor = hexToRgb('#443a18');
+const backgroundColor = hexToRgb('#ffffff');
 const outlineFade = [
-  hexToRgb('#5a4822')
+  hexToRgb('#ffffff')
 ];
 
 const bodyFade = [
@@ -30,8 +30,8 @@ const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
 const mainShadowColor = '#550e0e39';
-const secondaryShadowColor = '#ffde3910';
-const highlightShadowColor = '#d9ff00ff';
+const secondaryShadowColor = '#caff3941';
+const highlightShadowColor = '#09ff009a';
 const mainShadowProportion = 0.985;
 /*
 const backgroundColor = hexToRgb('#c9d2d2');
@@ -65,8 +65,8 @@ export const settings = {
     circleRadius: 0.5
   },
   attractor: {
-    min: 0.7,
-    max: 1.1,
+    min: 0.0,
+    max: 0.0,
     minRange: 1,
     maxRange: 500,
 
@@ -95,32 +95,33 @@ export const settings = {
     minDepth: 1,
 
     minDistance: {
-      min: 5,
-      max: 50,
+      min: 10,
+      max: 10,
     },
     maxDistance: {
-      min: 50,
-      max: 140
+      min: 100,
+      max: 200
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
-      min: 1,
-      max: 0.4
+      min: 0.9,
+      max: 0.1
     },
     stepSize: {
       min: 1.5,
       max: 8
     },
     randomDeviation: {
-      min: 0.2,
-      max: 0.5
+      min: 0.5,
+      max: 1.0
     }
   },
   rendererSettings: {
-    minThickness: 1.0,
-    maxThickness: 130,
+    minThickness: 0.5,
+    maxThickness: 30,
     thicknessPow: 2.4,
     thicknessDelta: 0.2,
+    outlineThickness: 0.5,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2

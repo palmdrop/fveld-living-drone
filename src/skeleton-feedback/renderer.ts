@@ -93,7 +93,7 @@ export const createRenderer = (
       lowerLayerColor.b,
     );
 
-    lowerLayer.strokeWeight(thickness + 2);
+    lowerLayer.strokeWeight(thickness + settings.outlineThickness);
 
     if (Math.random() < settings.colors.mainShadowProportion) {
       lowerLayerContext.shadowOffsetX = settings.colors.mainShadow.offsetX;
