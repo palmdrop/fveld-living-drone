@@ -18,21 +18,22 @@ const secondaryShadowColor = '#a2a98410';
 const highlightShadowColor = '#ff5100ff';
 const mainShadowProportion = 0.98;
 */
-const backgroundColor = hexToRgb('#ffffff');
 const outlineFade = [
-  hexToRgb('#ffffff')
+  hexToRgb('#141a1a')
 ];
 
 const bodyFade = [
-  backgroundColor
+  hexToRgb('#e8f7f7'),
+  hexToRgb('#e8f7f7'),
 ];
+
 const attractorColor = hexToRgb('#d6de4f');
 const attractorShadowColor = hexToRgb('#e0e75a');
 
 const mainShadowColor = '#550e0e39';
-const secondaryShadowColor = '#caff3941';
-const highlightShadowColor = '#09ff009a';
-const mainShadowProportion = 0.985;
+const secondaryShadowColor = '#1b3235da';
+const highlightShadowColor = '#b5f520ff';
+const mainShadowProportion = 0.885;
 /*
 const backgroundColor = hexToRgb('#c9d2d2');
 const outlineFade = [
@@ -55,16 +56,20 @@ const mainShadowProportion = 1.0;
 export const settings = {
   heightMap: {
     frequency: random(0.02, 0.004),
-    pow: 2.3,
+    pow: 2.5,
     speed: 3
   },
   leaves: {
     tries: 8,
-    minRadius: 5,
-    maxRadius: 160,
+    minRadius: 6,
+    maxRadius: 100,
     circleRadius: 0.5
   },
   attractor: {
+    /*
+    min: 0.5,
+    max: 0.5,
+    */
     min: 0.0,
     max: 0.0,
     minRange: 1,
@@ -95,11 +100,11 @@ export const settings = {
     minDepth: 1,
 
     minDistance: {
-      min: 10,
-      max: 10,
+      min: 5,
+      max: 50,
     },
     maxDistance: {
-      min: 100,
+      min: 200,
       max: 200
     },
     // TODO: make dynamics higher when closer to attractor?
@@ -108,7 +113,7 @@ export const settings = {
       max: 0.1
     },
     stepSize: {
-      min: 1.5,
+      min: 2.0,
       max: 8
     },
     randomDeviation: {
@@ -117,17 +122,17 @@ export const settings = {
     }
   },
   rendererSettings: {
-    minThickness: 0.5,
-    maxThickness: 30,
-    thicknessPow: 2.4,
-    thicknessDelta: 0.2,
+    minThickness: 0.0,
+    maxThickness: 10,
+    thicknessPow: 2.3,
+    thicknessDelta: 0.1,
     outlineThickness: 0.5,
     elevation: {
       angle: Math.random() * Math.PI * 2,
       steps: 2
     },
     colors: {
-      background: backgroundColor,
+      background: bodyFade[0],
       bodyFade,
       outlineFade,
       fadeAmount: 0.6,
@@ -142,21 +147,21 @@ export const settings = {
         color: mainShadowColor
       },
       secondaryShadow: {
-        offsetX: -10,
-        offsetY: -10,
-        blur: 15,
+        offsetX: -2,
+        offsetY: -2,
+        blur: 10,
         color: secondaryShadowColor
       },
       highlightShadow: {
-        offsetX: -30,
-        offsetY: -30,
-        blur: 70,
+        offsetX: -20,
+        offsetY: -20,
+        blur: 20,
         color: highlightShadowColor
       }
     },
     fade: {
       // amount: 0.008,
-      amount: 0.0,
+      amount: 0.5,
       frequency: 300
     },
     attractor: {

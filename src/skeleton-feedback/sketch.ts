@@ -174,12 +174,6 @@ export const sketch = (p: p5, callback: (p: p5, canvas: HTMLCanvasElement) => vo
     mouseHeld = false;
   }
 
-  p.keyPressed = () => {
-    if (p.key === 'd') {
-      p.saveCanvas('livingDrone', 'png');
-    }
-  }
-
   let steps = 0;
   // Delta is limited to avoid strange issues when the browser window is out of focus
   const maxDelta = 1 / 20;
