@@ -63,7 +63,8 @@ export const settings = {
     tries: 8,
     minRadius: 6,
     maxRadius: 100,
-    circleRadius: 0.5
+    // circleRadius: 0.5
+    circleRadius: 0.0
   },
   attractor: {
     /*

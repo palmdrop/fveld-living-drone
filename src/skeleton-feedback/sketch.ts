@@ -8,7 +8,7 @@ import { settings } from './settings';
 import { randomElement } from '../utils/array';
 import { Attractor, createAttractor } from './attractor';
 
-export const sketch = (p: p5, callback: (p: p5, canvas: HTMLCanvasElement) => void) => {
+export const sketch = (p: p5, parentElement: HTMLElement, callback: (p: p5, canvas: HTMLCanvasElement) => void) => {
   let poissionDiskSampleGenerator: PoissonDiskSampleGenerator;
   let graph: SpaceColonizationGraph;
   let attractor: Attractor;
@@ -119,10 +119,11 @@ export const sketch = (p: p5, callback: (p: p5, canvas: HTMLCanvasElement) => vo
   }
 
   p.setup = () => {
-    const p5Renderer = p.createCanvas(window.innerWidth, window.innerHeight);
+    const width = parentElement.clientWidth;
+    const height = parentElement.clientHeight;
+
+    const p5Renderer = p.createCanvas(width, height);
     const canvas = p5Renderer.elt as HTMLCanvasElement;
-    canvas.style.width = "100vw";
-    canvas.style.height = "100vh";
 
     p.smooth();
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
