@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import p5 from 'p5';
 import { PoissonDiskSampleGenerator } from '../systems/generation/PoissionDiskSampleGenerator';
 import { Point } from '../types/point';
@@ -8,7 +11,7 @@ import { settings } from './settings';
 import { randomElement } from '../utils/array';
 import { Attractor, createAttractor } from './attractor';
 
-export const sketch = (p: p5, parentElement: HTMLElement, callback: (p: p5, canvas: HTMLCanvasElement) => void) => {
+export const sketch = (p: p5, parentElement: HTMLElement, settings: Record<string, any>, callback: (p: p5, canvas: HTMLCanvasElement) => void) => {
   let poissionDiskSampleGenerator: PoissonDiskSampleGenerator;
   let graph: SpaceColonizationGraph;
   let attractor: Attractor;
@@ -81,7 +84,7 @@ export const sketch = (p: p5, parentElement: HTMLElement, callback: (p: p5, canv
   }
 
   const getRadius = () => {
-    return Math.min(p.width, p.height) * settings.leaves.circleRadius;
+    return Math.min(p.width, p.height) * (settings.leaves.circleRadius ?? 0.0);
   }
 
   const createPointGenerator = () => {
@@ -97,11 +100,13 @@ export const sketch = (p: p5, parentElement: HTMLElement, callback: (p: p5, canv
         h: 2 * radius,
       };
     } else {
+      const w = p.width * settings.leaves.width;
+      const h = p.height * settings.leaves.height;
       area = {
-        x: 0,
-        y: 0,
-        w: p.width,
-        h: p.height,
+        x: (p.width - w) / 2,
+        y: (p.height - h) / 2,
+        w,
+        h,
       }
     }
 
