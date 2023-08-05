@@ -11,7 +11,7 @@ import { settings } from './settings';
 import { randomElement } from '../utils/array';
 import { Attractor, createAttractor } from './attractor';
 
-export const sketch = (p: p5, parentElement: HTMLElement, settings: Record<string, any>, callback: (p: p5, canvas: HTMLCanvasElement) => void) => {
+export const sketch = (p: p5, parentElement: HTMLElement, settings: Record<string, any>, pixelRatio: number, callback: (p: p5, canvas: HTMLCanvasElement) => void) => {
   let poissionDiskSampleGenerator: PoissonDiskSampleGenerator;
   let graph: SpaceColonizationGraph;
   let attractor: Attractor;
@@ -132,7 +132,7 @@ export const sketch = (p: p5, parentElement: HTMLElement, settings: Record<strin
 
     p.smooth();
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
-    // p.pixelDensity(4);
+    p.pixelDensity(pixelRatio);
 
     poissionDiskSampleGenerator = createPointGenerator();
     poissionDiskSampleGenerator.generate(10000);
