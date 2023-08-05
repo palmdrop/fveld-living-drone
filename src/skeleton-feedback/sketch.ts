@@ -7,7 +7,6 @@ import { Point } from '../types/point';
 import { SpaceColonizationGraph } from '../systems/generation/SpaceColonizationGraph';
 import { Area, lengthOfVector, mapLinear, randomUnitVector } from '../utils/math';
 import { Renderer, createRenderer } from './renderer';
-import { settings } from './settings';
 import { randomElement } from '../utils/array';
 import { Attractor, createAttractor } from './attractor';
 
