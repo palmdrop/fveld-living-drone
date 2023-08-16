@@ -12,20 +12,20 @@ component library - https://articles.wesionary.team/react-component-library-with
 
 - [X] add randomization to colors
 
-- [ ] animate underlying noise slightly to adapt thickness and color for each layer?
+- [X] animate underlying noise slightly to adapt thickness and color for each layer?
 
 - [X] add support for gradients with more than two colors
 
-- [ ] experiment with hyper-thin, windling lines, soft blobs, watercolor styles, etdc
+- [-] experiment with hyper-thin, windling lines, soft blobs, watercolor styles, etdc
   * shadow spots experiments
   * thin lines
   * random specks, etc
 
-- [ ] Add detail
-  - [ ] Lighter color details
-  - [ ] Randomized rendering (noise, specks, lines)
+- [-] Add detail
+  - [-] Lighter color details
+  - [-] Randomized rendering (noise, specks, lines)
 
-- [ ] figure out how to handle window resize
+- [X] figure out how to handle window resize
   * and how to handle reize in the middle of graph growth?
   * options:
     * clear and keep going
@@ -33,13 +33,13 @@ component library - https://articles.wesionary.team/react-component-library-with
     * re-render everything
     * resize current render
 
-- [ ] optimize
-  - [ ] minimize draw calls
-  - [ ] reduce complexity for mobile devices
+- [X] optimize
+  - [X] minimize draw calls
+  - [X] reduce complexity for mobile devices
 
-- [ ] ensure interactivity on mobile devices
+- [X] ensure interactivity on mobile devices
 
-- [ ] scale properly for different screen sizes
+- [X] scale properly for different screen sizes
   * should sketch have the same level of detail regardless of screen size?
   * or should it scale, i.e less complexity for smaller screens?
 

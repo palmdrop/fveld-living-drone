@@ -7,7 +7,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:react-hooks/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -17,16 +16,14 @@ module.exports = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react-refresh'],
+  ignorePatterns: [
+    'vite.config.ts'
+  ],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
     '@typescript-eslint/no-non-null-assertion': 'off',
     "@typescript-eslint/type-annotation-spacing": "error",
     "space-in-parens": [
       "error", "never"
     ]
-  },
+  }
 }
