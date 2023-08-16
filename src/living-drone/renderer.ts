@@ -90,6 +90,10 @@ export const createRenderer = (
       settings.colors.background.g,
       settings.colors.background.b
     );
+
+    oldBaseLayer.remove();
+    oldLowerLayer.remove();
+    oldUpperLayer.remove();
   }
 
   const renderConnection = (

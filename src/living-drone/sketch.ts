@@ -146,9 +146,7 @@ export const sketch = (p: p5) => {
     const width = canvas.parentElement?.clientWidth ?? window.innerWidth;
     const height = canvas.parentElement?.clientHeight ?? window.innerHeight;
 
-    p.resizeCanvas(width, height);
-
-    renderer.handleResize();
+    renderer.handleResize(width, height);
 
     hasResizedSinceCurrentGraph = true;
   }, 300);
