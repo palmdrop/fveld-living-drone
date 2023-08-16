@@ -60,7 +60,6 @@ class SegmentData {
     this.interactions = 1;
   }
 }
-// TODO: change to an actual graph? this is still a tree
 export class SpaceColonizationGraph {
   private minDistance: ArgumentFunction;
   private maxDistance: ArgumentFunction;
@@ -71,16 +70,20 @@ export class SpaceColonizationGraph {
   private area: Area;
 
   private leaves: Point[];
-  private consumedLeaves: Point[];
   // TODO: track which leaves have been interacted with. If they then stop being interacted with, remove!
 
   private exhausted = false;
 
   private segments: Quadtree<SegmentData>;
   private root?: Segment;
-  private maxDepth?: number;
 
   private gravity?: Gravity;
+
+  // Data structures for temporary data
+  // Leaves that have been consumed this growth step
+  private consumedLeaves = new Set<Point>();
+  // All segments that interacted with a leaf (living segments)
+  private interactingSegmentData = new Set<SegmentData>();
 
   constructor( 
     minDistance: ArgumentFunction | number, 
@@ -88,9 +91,7 @@ export class SpaceColonizationGraph {
     dynamics: ArgumentFunction | number, 
     stepSize: ArgumentFunction | number, 
     randomDeviation: ArgumentFunction | number,
-    private mode: 'open' | 'closed' | 'broken-closed' = 'open',
     private maxChildren: number = 3,
-    private minDepth: number = 1
   ) {
     this.minDistance = toArgumentFunction(minDistance);
     this.maxDistance = toArgumentFunction(maxDistance);
@@ -103,8 +104,7 @@ export class SpaceColonizationGraph {
     };
 
     this.leaves = [];
-    this.consumedLeaves = [];
-    this.segments = this._createQuadtree();
+    this.segments = this.createQuadtree();
   }
 
   setGravity(gravity: Gravity) {
@@ -124,7 +124,7 @@ export class SpaceColonizationGraph {
     this.gravity.point = undefined;
   }
 
-  _createQuadtree() {
+  private createQuadtree() {
     return new Quadtree<SegmentData>(this.area, 8, 3);
   }
 
@@ -140,7 +140,7 @@ export class SpaceColonizationGraph {
       depth: 0
     };
 
-    this.segments = this._createQuadtree();
+    this.segments = this.createQuadtree();
     this.segments.insert(origin, new SegmentData(root, this.maxChildren));
 
     for(let i = 0; i < iterations && !this.exhausted; i++) this.grow();
@@ -158,14 +158,9 @@ export class SpaceColonizationGraph {
     let foundOne = false;
 
     // Octree of new segments
-    const nextSegmentData = this._createQuadtree();
+    const nextSegmentData = this.createQuadtree();
 
-    // All segments that interacted with a leaf (living segments)
-    const interactingSegmentData = new Set<SegmentData>();
-    
-    // Active leafs
-    // NOTE: only used for closed mode
-    const interactingLeaves = new Map<Point, SegmentData[]>();
+    this.interactingSegmentData.clear();
 
     const addGravity = (position: Point, direction: Point) => {
       if(!this.gravity || !this.gravity.point) return;
@@ -193,98 +188,50 @@ export class SpaceColonizationGraph {
       return direction;
     }
 
+    this.consumedLeaves.clear();
+
     // Iterate over all leaves and check if there's a segment that can interact with it
-    for(let i = this.leaves.length - 1; i >= 0; i--) {
-      const leaf = this.leaves[ i ];
+    for(let i = 0; i < this.leaves.length; i++) {
+      const leaf = this.leaves[i];
 
-      if(this.mode === 'open') {
-        // Find the closest segment (within the maxDistance)
-        const closestSegmentData = this._closestSegmentData(leaf);
+      // Find the closest segment (within the maxDistance)
+      const closestSegmentData = this._closestSegmentData(leaf);
 
-        // If none is found, continue to next leaf
-        if(!closestSegmentData) continue;
-        foundOne = true;
+      // If none is found, continue to next leaf
+      if(!closestSegmentData) continue;
+      foundOne = true;
 
-        const segmentOrigin = closestSegmentData.segment.origin;
+      const segmentOrigin = closestSegmentData.segment.origin;
 
-        const minDistance = this.minDistance(segmentOrigin);
-        const dynamics = this.dynamics(segmentOrigin);
+      const minDistance = this.minDistance(segmentOrigin);
+      const dynamics = this.dynamics(segmentOrigin);
 
-        const distSq = distanceToSquared(leaf, segmentOrigin);
+      const distSq = distanceToSquared(leaf, segmentOrigin);
 
-        // If the segment is sufficiently close to the leaf, remove the leaf
-        if(distSq < minDistance * minDistance) {
-          this.consumeLeaf(i);
-        } else {
-          // Otherwise, prepare for creating a new segment
-
-          // Calculate the desired direction
-          const dir = lerpPoints(
-            closestSegmentData.segment.direction, 
-            normalizeVector({
-              x: leaf.x - closestSegmentData.segment.origin.x,
-              y: leaf.y - closestSegmentData.segment.origin.y,
-            }),
-            dynamics
-          );
-
-          addGravity(closestSegmentData.segment.origin, dir);
-
-          // and accumulate (a segment might be attracted by multiple leaves)
-          closestSegmentData.newDirection.x += dir.x;
-          closestSegmentData.newDirection.y += dir.y;
-          closestSegmentData.interactions++;
-
-          interactingSegmentData.add(closestSegmentData);
-        }
+      // If the segment is sufficiently close to the leaf, remove the leaf
+      if(distSq < minDistance * minDistance) {
+        this.consumedLeaves.add(leaf);
       } else {
-        const neighborSegments = this._relativeNeighborSegmentData(leaf);
+        // Otherwise, prepare for creating a new segment
 
-        if (neighborSegments.length) {
-          interactingLeaves.set(leaf, neighborSegments);
-        }
+        // Calculate the desired direction
+        const dir = lerpPoints(
+          closestSegmentData.segment.direction, 
+          normalizeVector({
+            x: leaf.x - closestSegmentData.segment.origin.x,
+            y: leaf.y - closestSegmentData.segment.origin.y,
+          }),
+          dynamics
+        );
 
-        for(const segmentData of neighborSegments) {
-          // NOTE: this is wrong, but creates interesting results!
-          // if (segmentData.reached) continue;
+        addGravity(closestSegmentData.segment.origin, dir);
 
-          const segmentOrigin = segmentData.segment.origin;
-          const minDistance = this.minDistance(segmentOrigin);
-          const distSq = distanceToSquared(leaf, segmentOrigin);
+        // and accumulate (a segment might be attracted by multiple leaves)
+        closestSegmentData.newDirection.x += dir.x;
+        closestSegmentData.newDirection.y += dir.y;
+        closestSegmentData.interactions++;
 
-          if(distSq < minDistance * minDistance) {
-            segmentData.reached = true;
-
-            if(neighborSegments.some(neighbor => !neighbor.reached && !neighbor.segment.children.length)) {
-              interactingSegmentData.add(segmentData);
-            }
-
-            continue;
-          }
-
-          if(!segmentData.reached) foundOne = true;
-
-          const dynamics = this.dynamics(segmentOrigin);
-
-          // TODO: this could be abstracted to separate function
-          const dir = lerpPoints( 
-            segmentData.segment.direction, 
-            normalizeVector({
-              x: leaf.x - segmentData.segment.origin.x,
-              y: leaf.y - segmentData.segment.origin.y
-            }),
-            dynamics
-          );
-          
-          addGravity(segmentData.segment.origin, dir);
-
-          // and accumulate (a segment might be attracted by multiple leaves)
-          segmentData.newDirection.x += dir.x;
-          segmentData.newDirection.y += dir.y;
-          segmentData.interactions++;
-
-          interactingSegmentData.add(segmentData);
-        }
+        this.interactingSegmentData.add(closestSegmentData);
       }
     }
 
@@ -295,15 +242,7 @@ export class SpaceColonizationGraph {
     }
 
     // Iterate over all the segments that interacted with a leaf
-    interactingSegmentData.forEach(segmentData => {
-      if (segmentData.reached && segmentData.segment.depth! > this.minDepth) {
-        if(this.mode !== 'broken-closed') {
-          nextSegmentData.insert(segmentData.segment.origin, segmentData);
-        }
-
-        return;
-      }
-
+    this.interactingSegmentData.forEach(segmentData => {
       segmentData.normalize();
 
       const randomDeviation = this.randomDeviation(segmentData.segment.origin);
@@ -333,47 +272,13 @@ export class SpaceColonizationGraph {
       nextSegmentData.insert(newSegment.origin, new SegmentData(newSegment, this.maxChildren));
     });
 
-    // iterate over all leafs that have active segments in their neighborhood
     this.leaves = this.leaves.filter(leaf => {
-      if(!interactingLeaves.has(leaf)) return true;
-
-      const segmentsData = interactingLeaves.get(leaf)!;
-      let allReached = true;
-      let oneInKillDistance = false;
-      // return segmentsData.some(segment => !segment.reached);
-      for(const segmentData of segmentsData) {
-        if(!segmentData.reached) {
-          allReached = false;
-          break;
-        }
-
-        const distToSq = distanceToSquared(leaf, segmentData.segment.origin);
-        const minDistance = this.minDistance(segmentData.segment.origin);
-        if(distToSq <= minDistance * minDistance) {
-          oneInKillDistance = true;
-
-          const connector: Segment = {
-            origin: leaf,
-            direction: segmentData.newDirection,
-            children: [],
-            parent: segmentData.segment,
-            depth: segmentData.segment.depth! + 1
-          };
-
-          segmentData.segment.children.push(connector);
-        }
-      }
-
-      const consumed = (allReached && oneInKillDistance);
-
-      if(consumed) {
-        this.consumedLeaves.push(leaf);
-      }
-
-      return !consumed;
+      return !this.consumedLeaves.has(leaf);
     });
 
     this.segments = nextSegmentData;
+
+    console.log(this.segments.size);
 
     return false;
   }
@@ -463,100 +368,12 @@ export class SpaceColonizationGraph {
     this.root && traverseSegment(this.root, null, 1);
   }
 
-  calculateDepths() {
-    // Calculate max depth
-    let maxDepth = -1;
-
-    this.traverse((segment: Segment, _: Segment | null, depth: number) => {
-      // And set the depth of each segment
-      segment.depth = depth;
-
-      maxDepth = Math.max(maxDepth, depth);
-    });
-    this.maxDepth = maxDepth;
-
-    // Calculate the reverse depth (number of segments from a leaf)
-    const calculateReverseDepth = (segment: Segment) => {
-      let count = 0;
-
-      segment.children.forEach(child => {
-        count = Math.max(count, calculateReverseDepth(child));
-      });
-
-      segment.reverseDepth = 1 + count;
-
-      return segment.reverseDepth;
-    };
-
-    this.root && calculateReverseDepth(this.root);
-  }
-
-  toSkeleton(threshold: number | ((segment: Segment, maxDepth: number) => number)) {
-    this.calculateDepths();
-
-    let thresholdFunction: (segment: Segment, maxDepth: number) => number;
-    if(typeof threshold !== 'function') thresholdFunction = () => threshold;
-    else thresholdFunction = threshold;
-
-    const convert = (segment: Segment) => {
-      let current = segment;
-
-      //TODO what to do if segment has multiple children at start?
-
-      if(current.children.length === 0) return;
-
-      if(current.children.length > 1) {
-        current.children.forEach(child => {
-          convert(child);
-        });
-
-        return;
-      }
-
-      while(current.children.length === 1) {
-        const child = current.children[ 0 ];
-
-        const dotDirection = dot(current.direction, child.direction);
-        const angle = mapLinear(dotDirection, -1, 1, Math.PI * 2, 0);
-
-        const t = thresholdFunction(child, this.maxDepth || 0);
-
-        if(angle > t) {
-          segment.position = current.position;
-          segment.direction = current.direction;
-          segment.children = current.children;
-
-          convert(child);
-          return;
-        }
-        current = child;
-      }
-
-      segment.position = current.position;
-      segment.direction = current.direction;
-      segment.children = current.children;
-
-      convert(segment);
-    };
-
-    this.root && convert(this.root);
-  }
-
-  private consumeLeaf(index: number) {
-    const leaf = this.leaves.splice(index, 1);
-    this.consumedLeaves.push(...leaf);
-  }
-
   getSegments() {
     return this.segments;
   }
 
   getLeaves() {
     return this.leaves;
-  }
-
-  getConsumedLeaves() {
-    return this.consumedLeaves;
   }
 
   isExhausted() {

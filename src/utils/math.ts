@@ -12,12 +12,12 @@ export type Area = {
 };
 
 export type Volume = {
-  x : number,
-  y : number,
-  z : number,
-  w : number,
-  h : number,
-  d : number
+  x: number,
+  y: number,
+  z: number,
+  w: number,
+  h: number,
+  d: number
 }
 
 export type Circle = {
@@ -26,23 +26,23 @@ export type Circle = {
   radius: number
 }
 
-export const remap = ( value : number, min : number, max : number, newMin : number, newMax : number ) => {
-  const normalized = ( value - min ) / ( max - min );
-  return normalized * ( newMax - newMin ) + newMin;
+export const remap = (value: number, min: number, max: number, newMin: number, newMax: number) => {
+  const normalized = (value - min) / (max - min);
+  return normalized * (newMax - newMin) + newMin;
 };
-export const square = ( v : number ) => v * v;
+export const square = (v: number) => v * v;
 
 export const areaPointIntersection = (area: Area, point: Point) => {
   const { x, y, w, h } = area;
 
-  return ( point.x >= x ) && ( point.x < ( x + w ) )
-    && ( point.y >= y ) && ( point.y < ( y + h ) );
+  return (point.x >= x) && (point.x < (x + w))
+    && (point.y >= y) && (point.y < (y + h));
 };
 
 export const circlePointIntersection = (circle: Circle, point: Point) => {
   const { x, y, radius } = circle;
   const distanceSquared = Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2);
-  return distanceSquared < square( radius );
+  return distanceSquared < square(radius);
 };
 
 export const circleAreaIntersection = (circle: Circle, area: Area) => {
@@ -52,11 +52,11 @@ export const circleAreaIntersection = (circle: Circle, area: Area) => {
 }
 
 export function clamp(value: number, min: number, max: number) {
-	return Math.max(min, Math.min( max, value ));
+	return Math.max(min, Math.min(max, value));
 }
 
-export function mapLinear( x: number, a1: number, a2: number, b1: number, b2: number ) {
-	return b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 );
+export function mapLinear(x: number, a1: number, a2: number, b1: number, b2: number) {
+	return b1 + (x - a1) * (b2 - b1) / (a2 - a1);
 }
 
 export const randomInArea = (area: Area) => {

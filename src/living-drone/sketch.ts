@@ -53,9 +53,7 @@ export const sketch = (p: p5) => {
         settings.growth.randomDeviation.min, 
         settings.growth.randomDeviation.max
       ),
-      settings.growth.mode,
-      settings.growth.maxChildren,
-      settings.growth.minDepth 
+      settings.growth.maxChildren
     );
 
     graph.setGravity(settings.attractor);
@@ -139,6 +137,8 @@ export const sketch = (p: p5) => {
     } else {
       points = poissionDiskSampleGenerator.points;
     }
+
+    console.log(points);
 
     graph = createGraph([...points]);
 

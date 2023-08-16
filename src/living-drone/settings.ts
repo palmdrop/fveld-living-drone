@@ -28,11 +28,9 @@ export const settings = {
     speed: 10
   },
   leaves: {
-    tries: 8,
-    minRadius: 30,
-    maxRadius: 150,
-    // circleRadius: 0.25
-    // circleRadius: 0.5
+    tries: 5,
+    minRadius: 35,
+    maxRadius: 220,
     circleRadius: 0.0
   },
   attractor: {
@@ -62,16 +60,14 @@ export const settings = {
     startPosition: 'fromSeed',
     maxSteps: 2000,
     maxChildren: 2,
-    mode: 'open',
-    minDepth: 1,
 
     minDistance: {
       min: 20,
       max: 80,
     },
     maxDistance: {
-      min: 80,
-      max: 200
+      min: 140,
+      max: 250
     },
     // TODO: make dynamics higher when closer to attractor?
     dynamics: {
