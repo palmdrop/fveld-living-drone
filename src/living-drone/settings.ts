@@ -2,20 +2,12 @@ import { hexToRgb } from "../utils/color";
 
 const backgroundColor = hexToRgb('#f0f3ec');
 
-/*
-#828e7f
-#bed6cb
-#675870
-#5e6598
-#2f0324
-#171e28
-*/
-
 const outlineFade = [
   hexToRgb('#566453'),
   hexToRgb('#748d81'),
   hexToRgb('#a596ad'),
   hexToRgb('#373d6b'),
+  hexToRgb('#6e8786'),
   hexToRgb('#822b47'),
   hexToRgb('#666f7b')
 ];
@@ -25,27 +17,12 @@ const bodyFade = [
   hexToRgb('#bed6cb'),
   hexToRgb('#675870'),
   hexToRgb('#5e6598'),
+  hexToRgb('#accac8'),
   hexToRgb('#2f0324'),
   hexToRgb('#171e28')
 ];
 
-/*
-// OLD COLORS
-const outlineFade = [
-  hexToRgb('#663333'),
-  hexToRgb('#58642d'),
-  hexToRgb('#3b5c40')
-];
-
-const bodyFade = [
-  hexToRgb('#a8c187'),
-  hexToRgb('#702025'),
-  hexToRgb('#a0a383'),
-  hexToRgb('#9bae88')
-];
-*/
-
-const shadowColor = '#0c13280d';
+const shadowColor = '#0c132811';
 
 export const settings = {
   heightMap: {
@@ -127,9 +104,9 @@ export const settings = {
       fadeRandom: 0.005,
 
       shadow: {
-        x: 1,
-        y: 1,
-        blur: 4,
+        x: 2,
+        y: 2,
+        blur: 5,
         color: shadowColor
       }
     },
