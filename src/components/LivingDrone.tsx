@@ -1,6 +1,7 @@
 import p5 from 'p5';
 import { useRef, useEffect } from 'react';
 import { sketch } from '../living-drone/sketch';
+import { settings } from '../living-drone/settings';
 
 const LivingDrone = () => {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -15,13 +16,16 @@ const LivingDrone = () => {
     }
   }, [rootRef]);
 
+  const backgroundColor = settings.rendererSettings.colors.background;
+
   return (
     <div 
      ref={rootRef}
      style={{
       overflow: "hidden",
       width: "100vw",
-      height: "100vh"
+      height: "100vh",
+      backgroundColor: `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`
      }}
     />
   )

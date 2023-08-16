@@ -1,7 +1,36 @@
 import { hexToRgb } from "../utils/color";
 
-const backgroundColor = hexToRgb('#dedebe');
+const backgroundColor = hexToRgb('#f0f3ec');
 
+/*
+#828e7f
+#bed6cb
+#675870
+#5e6598
+#2f0324
+#171e28
+*/
+
+const outlineFade = [
+  hexToRgb('#566453'),
+  hexToRgb('#748d81'),
+  hexToRgb('#a596ad'),
+  hexToRgb('#373d6b'),
+  hexToRgb('#822b47'),
+  hexToRgb('#666f7b')
+];
+
+const bodyFade = [
+  hexToRgb('#828e7f'),
+  hexToRgb('#bed6cb'),
+  hexToRgb('#675870'),
+  hexToRgb('#5e6598'),
+  hexToRgb('#2f0324'),
+  hexToRgb('#171e28')
+];
+
+/*
+// OLD COLORS
 const outlineFade = [
   hexToRgb('#663333'),
   hexToRgb('#58642d'),
@@ -14,12 +43,9 @@ const bodyFade = [
   hexToRgb('#a0a383'),
   hexToRgb('#9bae88')
 ];
+*/
 
-
-const shadowColor = '#4311110f';
-
-const attractorColor = hexToRgb('#d6de4f');
-const attractorShadowColor = hexToRgb('#e0e75a');
+const shadowColor = '#0c13280d';
 
 export const settings = {
   heightMap: {
@@ -30,8 +56,7 @@ export const settings = {
   leaves: {
     tries: 5,
     minRadius: 35,
-    maxRadius: 220,
-    circleRadius: 0.0
+    maxRadius: 220
   },
   attractor: {
     min: 0.18,
@@ -86,7 +111,7 @@ export const settings = {
   rendererSettings: {
     minThickness: 1.7,
     maxThickness: 100,
-    thicknessPow: 2.3,
+    thicknessPow: 2.4,
     thicknessDelta: 0.2,
     outlineThickness: 2,
     elevation: {
@@ -102,22 +127,15 @@ export const settings = {
       fadeRandom: 0.005,
 
       shadow: {
-        x: 4,
-        y: 4,
-        blur: 10,
+        x: 1,
+        y: 1,
+        blur: 4,
         color: shadowColor
       }
     },
     fade: {
       amount: 0.02,
-      frequency: 350
-    },
-    attractor: {
-      show: false,
-      color: attractorColor,
-      shadowColor: attractorShadowColor,
-      shadowBlur: 50,
-      size: 30
+      frequency: 1000
     }
   }
 } as const;

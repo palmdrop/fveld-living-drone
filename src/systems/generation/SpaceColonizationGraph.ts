@@ -3,7 +3,7 @@
  */
 
 import { Point } from "../../types/point";
-import { Area, clamp, distanceToSquared, dot, lengthOfVector, lerpPoints, mapLinear, normalizeVector, randomUnitVector } from "../../utils/math";
+import { Area, clamp, distanceToSquared, lengthOfVector, lerpPoints, mapLinear, normalizeVector, randomUnitVector } from "../../utils/math";
 import { Quadtree } from "../data/QuadTree";
 
 type ArgumentFunction = (value: Point) => number;
@@ -85,6 +85,8 @@ export class SpaceColonizationGraph {
   // All segments that interacted with a leaf (living segments)
   private interactingSegmentData = new Set<SegmentData>();
 
+  private newSegments: SegmentData[] = [];
+
   constructor( 
     minDistance: ArgumentFunction | number, 
     maxDistance: ArgumentFunction | number, 
@@ -161,6 +163,7 @@ export class SpaceColonizationGraph {
     const nextSegmentData = this.createQuadtree();
 
     this.interactingSegmentData.clear();
+    this.newSegments.length = 0;
 
     const addGravity = (position: Point, direction: Point) => {
       if(!this.gravity || !this.gravity.point) return;
@@ -268,8 +271,12 @@ export class SpaceColonizationGraph {
       segmentData.reset();
       segmentData.segment.children.push(newSegment);
 
+      const newSegmentData = new SegmentData(newSegment, this.maxChildren);
+
       nextSegmentData.insert(segmentData.segment.origin, segmentData);
-      nextSegmentData.insert(newSegment.origin, new SegmentData(newSegment, this.maxChildren));
+      nextSegmentData.insert(newSegment.origin, newSegmentData);
+
+      this.newSegments.push(newSegmentData);
     });
 
     this.leaves = this.leaves.filter(leaf => {
@@ -277,8 +284,6 @@ export class SpaceColonizationGraph {
     });
 
     this.segments = nextSegmentData;
-
-    console.log(this.segments.size);
 
     return false;
   }
@@ -378,5 +383,9 @@ export class SpaceColonizationGraph {
 
   isExhausted() {
     return this.exhausted;
+  }
+
+  getNewSegments() {
+    return this.newSegments;
   }
 }

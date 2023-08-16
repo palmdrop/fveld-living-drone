@@ -2,7 +2,7 @@ import p5 from 'p5';
 import { PoissonDiskSampleGenerator } from '../systems/generation/PoissionDiskSampleGenerator';
 import { Point } from '../types/point';
 import { SpaceColonizationGraph } from '../systems/generation/SpaceColonizationGraph';
-import { Area, lengthOfVector, mapLinear, randomUnitVector } from '../utils/math';
+import { lengthOfVector, mapLinear, randomUnitVector } from '../utils/math';
 import { Renderer, createRenderer } from './renderer';
 import { settings } from './settings';
 import { randomElement } from '../utils/array';
@@ -10,13 +10,23 @@ import { Attractor, createAttractor } from './attractor';
 import { debounce } from '../utils/time';
 
 export const sketch = (p: p5) => {
-  let poissionDiskSampleGenerator: PoissonDiskSampleGenerator;
   let graph: SpaceColonizationGraph;
   let attractor: Attractor;
 
   let renderer: Renderer;
   let canvas: HTMLCanvasElement;
   let points: Point[];
+
+  let hasResizedSinceCurrentGraph = false;
+
+  const getArea = () => {
+    return {
+      x: 0,
+      y: 0,
+      w: p.width,
+      h: p.height
+    }
+  };
 
   const heightMap = (point: Point) => {
     return p.noise(
@@ -60,7 +70,7 @@ export const sketch = (p: p5) => {
 
     graph.generate(
       points,
-      poissionDiskSampleGenerator.area,
+      getArea(),
       randomElement(points),
       randomUnitVector(),
       1
@@ -76,33 +86,9 @@ export const sketch = (p: p5) => {
     return graph;
   }
 
-  const getRadius = () => {
-    return Math.min(p.width, p.height) * settings.leaves.circleRadius;
-  }
-
-  const createPointGenerator = () => {
-    const radius = getRadius();
-
-    let area: Area;
-
-    if(radius) {
-      area = {
-        x: p.width / 2 - radius,
-        y: p.height / 2 - radius,
-        w: 2 * radius,
-        h: 2 * radius,
-      };
-    } else {
-      area = {
-        x: 0,
-        y: 0,
-        w: p.width,
-        h: p.height,
-      }
-    }
-
-    return new PoissonDiskSampleGenerator({
-      area,
+  const generatePoints = () => {
+    const generator = new PoissonDiskSampleGenerator({
+      area: getArea(),
       heightMap, 
       tries: settings.leaves.tries,
       minRadius: settings.leaves.minRadius,
@@ -112,6 +98,8 @@ export const sketch = (p: p5) => {
         y: p.height / 2
       }
     });
+
+    return generator.generate(1000).samples;
   }
 
   p.setup = () => {
@@ -122,25 +110,10 @@ export const sketch = (p: p5) => {
 
     p.smooth();
     p.noiseSeed(Math.random() * Number.MAX_SAFE_INTEGER / 2);
-    p.pixelDensity(3);
+    p.pixelDensity(window.devicePixelRatio);
 
-    poissionDiskSampleGenerator = createPointGenerator();
-    poissionDiskSampleGenerator.generate(10000);
-
-    const radius = getRadius();
-    if(radius) {
-      const cX = poissionDiskSampleGenerator.area.x + poissionDiskSampleGenerator.area.w / 2;
-      const cY = poissionDiskSampleGenerator.area.y + poissionDiskSampleGenerator.area.h / 2;
-      points = poissionDiskSampleGenerator.points.filter(
-        point => ((point.x - cX) ** 2 + (point.y - cY) ** 2) < (radius ** 2)
-      );
-    } else {
-      points = poissionDiskSampleGenerator.points;
-    }
-
-    console.log(points);
-
-    graph = createGraph([...points]);
+    points = generatePoints();
+    graph = createGraph(points);
 
     attractor = createAttractor(
       randomElement(points),
@@ -150,7 +123,6 @@ export const sketch = (p: p5) => {
     renderer = createRenderer(
       p, 
       heightMap, 
-      attractor,
       settings.rendererSettings
     );
   }
@@ -175,7 +147,10 @@ export const sketch = (p: p5) => {
     const height = canvas.parentElement?.clientHeight ?? window.innerHeight;
 
     p.resizeCanvas(width, height);
+
     renderer.handleResize();
+
+    hasResizedSinceCurrentGraph = true;
   }, 300);
 
   p.windowResized = () => {
@@ -193,9 +168,15 @@ export const sketch = (p: p5) => {
       graph.grow();
       steps++;
     } else {
+      if(hasResizedSinceCurrentGraph) {
+        points = generatePoints();
+      }
+
       renderer.createNewLayer();
-      graph = createGraph([...points]);
+      graph = createGraph(points);
       steps = 0;
+
+      hasResizedSinceCurrentGraph = false;
     }
 
     renderer.draw(graph);

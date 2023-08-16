@@ -3,15 +3,16 @@ import { Segment, SpaceColonizationGraph } from "../systems/generation/SpaceColo
 import { Point } from "../types/point";
 import { clamp, lerp, mapLinear, random } from "../utils/math";
 import { Settings } from "./settings";
-import { Attractor } from "./attractor";
-import { rgbToHex, sampleGradient } from "../utils/color";
+import { sampleGradient } from "../utils/color";
 
 export const createRenderer = (
   p: p5,
   heightMap: (point: Point) => number,
-  attractor: Attractor,
   settings: Settings['rendererSettings']
 ) => {
+  let maxWidth = p.width;
+  let maxHeight = p.height;
+
   let baseContext: CanvasRenderingContext2D;
   let baseLayer: p5.Graphics;
   let lowerLayer: p5.Graphics;
@@ -21,9 +22,27 @@ export const createRenderer = (
   // TODO: make own function
   colorFadeOffset = Math.random() * (1 - settings.colors.fadeAmount);
 
+  const getGraphicsDimensions = (desiredWidth = p.width, desiredHeight = p.height) => {
+    const width = Math.max(maxWidth, desiredWidth);
+    const height = Math.max(maxHeight, desiredHeight);
+
+    maxWidth = width;
+    maxHeight = height;
+
+    return {
+      width,
+      height
+    }
+  }
+
   const initDrawLayers = () => {
-    lowerLayer = p.createGraphics(p.width, p.height);
-    upperLayer = p.createGraphics(p.width, p.height);
+    const {
+      width,
+      height
+    } = getGraphicsDimensions();
+
+    lowerLayer = p.createGraphics(width, height);
+    upperLayer = p.createGraphics(width, height);
     return {
       lowerLayer,
       upperLayer
@@ -31,7 +50,12 @@ export const createRenderer = (
   }
 
   const initBaseLayer = () => {
-    baseLayer = p.createGraphics(p.width, p.height);
+    const {
+      width,
+      height
+    } = getGraphicsDimensions();
+
+    baseLayer = p.createGraphics(width, height);
     baseContext = baseLayer.drawingContext as CanvasRenderingContext2D;
     return baseLayer;
   }
@@ -39,7 +63,14 @@ export const createRenderer = (
   initDrawLayers();
   initBaseLayer();
 
-  const handleResize = () => {
+  const handleResize = (elementWidth: number, elementHeight: number) => {
+    const {
+      width,
+      height
+    } = getGraphicsDimensions(elementWidth, elementHeight);
+
+    p.resizeCanvas(width, height);
+
     const oldLowerLayer = lowerLayer;
     const oldUpperLayer = upperLayer;
     const oldBaseLayer = baseLayer;
@@ -119,8 +150,6 @@ export const createRenderer = (
       child.origin.x, child.origin.y,
     );
 
-    // TODO: render additional steps
-
     // Render upper layer
     upperLayer.stroke(
       upperLayerColor.r, 
@@ -136,12 +165,11 @@ export const createRenderer = (
   }
 
   const draw = (graph: SpaceColonizationGraph) => {
-    graph.getSegments().traverseEntries(({ data }) => {
-      if(!data || !data.segment.parent) return;
+    graph.getNewSegments().forEach(data => {
       const segment = data.segment;
       const parent = segment.parent!;
       renderConnection(parent, segment, lowerLayer, upperLayer)
-    })
+    });
   }
 
   let lastFade = p.millis();
@@ -167,34 +195,6 @@ export const createRenderer = (
     p.image(baseLayer, 0, 0);
     p.image(lowerLayer, 0, 0);
     p.image(upperLayer, 0, 0);
-
-    if(settings.attractor.show) {
-      p.fill(
-        settings.attractor.color.r,
-        settings.attractor.color.g,
-        settings.attractor.color.b
-      );
-
-      p.noStroke();
-      const drawingContext = p.drawingContext as CanvasRenderingContext2D;
-      drawingContext.save();
-      drawingContext.shadowBlur = settings.attractor.shadowBlur;
-      drawingContext.shadowOffsetX = 0;
-      drawingContext.shadowOffsetY = 0;
-      drawingContext.shadowColor = rgbToHex(
-        settings.attractor.shadowColor.r,
-        settings.attractor.shadowColor.g,
-        settings.attractor.shadowColor.b
-      );
-
-      p.ellipse(
-        attractor.position.x,
-        attractor.position.y,
-        settings.attractor.size
-      );
-
-      drawingContext.restore();
-    }
   }
 
   const createNewLayer = () => {
