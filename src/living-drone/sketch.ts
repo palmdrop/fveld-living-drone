@@ -108,7 +108,6 @@ export const sketch = (p: p5) => {
   }
 
   p.setup = () => {
-    const pixelDensity = p.pixelDensity();
     const width = preventResize 
       ? p.displayWidth 
       : window.innerWidth;
