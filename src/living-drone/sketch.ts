@@ -110,11 +110,11 @@ export const sketch = (p: p5) => {
   p.setup = () => {
     const pixelDensity = p.pixelDensity();
     const width = preventResize 
-      ? (p.displayWidth * pixelDensity) 
+      ? p.displayWidth 
       : window.innerWidth;
 
     const height = preventResize 
-      ? (p.displayHeight * pixelDensity) 
+      ? p.displayHeight 
       : window.innerHeight;
 
     const p5Renderer = p.createCanvas(width, height);
