@@ -8,6 +8,7 @@ import { settings } from './settings';
 import { randomElement } from '../utils/array';
 import { Attractor, createAttractor } from './attractor';
 import { debounce } from '../utils/time';
+import { UAParser } from 'ua-parser-js';
 
 export const sketch = (p: p5) => {
   let graph: SpaceColonizationGraph;
@@ -18,6 +19,10 @@ export const sketch = (p: p5) => {
   let points: Point[];
 
   let hasResizedSinceCurrentGraph = false;
+
+  const deviceType = new UAParser().getDevice().type as string;
+  const preventResize = ([UAParser.DEVICE.MOBILE, UAParser.DEVICE.WEARABLE, UAParser.DEVICE.EMBEDDED] as string[])
+    .includes(deviceType);
 
   const getArea = () => {
     return {
@@ -103,7 +108,16 @@ export const sketch = (p: p5) => {
   }
 
   p.setup = () => {
-    const p5Renderer = p.createCanvas(window.innerWidth, window.innerHeight);
+    const pixelDensity = p.pixelDensity();
+    const width = preventResize 
+      ? (p.displayWidth * pixelDensity) 
+      : window.innerWidth;
+
+    const height = preventResize 
+      ? (p.displayHeight * pixelDensity) 
+      : window.innerHeight;
+
+    const p5Renderer = p.createCanvas(width, height);
     canvas = p5Renderer.elt as HTMLCanvasElement;
     canvas.style.width = "100vw";
     canvas.style.height = "100vh";
@@ -151,8 +165,10 @@ export const sketch = (p: p5) => {
     hasResizedSinceCurrentGraph = true;
   }, 300);
 
-  p.windowResized = () => {
-    void handleResize();
+  if(!preventResize) {
+    p.windowResized = () => {
+      void handleResize();
+    }
   }
 
   let steps = 0;

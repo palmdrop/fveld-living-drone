@@ -64,12 +64,7 @@ export const createRenderer = (
   initBaseLayer();
 
   const handleResize = (elementWidth: number, elementHeight: number) => {
-    const {
-      width,
-      height
-    } = getGraphicsDimensions(elementWidth, elementHeight);
-
-    p.resizeCanvas(width, height);
+    p.resizeCanvas(elementWidth, elementHeight);
 
     const oldLowerLayer = lowerLayer;
     const oldUpperLayer = upperLayer;
