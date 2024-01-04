@@ -18,8 +18,3 @@ window.addEventListener('load', () => {
 window.addEventListener('unload', () => {
   p5Instance.remove();
 });
-
-
-
-
-
